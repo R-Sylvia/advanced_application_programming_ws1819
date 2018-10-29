@@ -1,12 +1,12 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
-var path = require("path");
+let path = require("path");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  //res.render('index', { title: 'Express' });
-    res.sendFile(path.join(__dirname, '/../public/client.html'));
+  res.render('index', { title: 'Express' });
+   // res.sendFile(path.join(__dirname, '/../public/client.html'));
 });
 
 router.use(express.static("public"));
