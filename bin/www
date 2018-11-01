@@ -5,7 +5,7 @@
  */
 
 let app = require('../app');
-let debug = require('debug')('testproject:server');
+let debug = require('debug')('grabIT:server');
 let http = require('http');
 //let WebSocketServer = require('websocket').server;
 
