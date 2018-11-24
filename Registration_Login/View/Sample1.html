@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title >Courses</title>
+    <title>Courses</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  
+
     <style>
 
         body {margin:0;}
@@ -189,155 +190,156 @@ span.psw {
 
     </style>
 </head>
- 
+
 <body>
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            
-        </div>
-        <ul class="nav navbar-nav">
-            <li><a href="https://www.google.com/">Home</a></li>
-            <li><a href="https://www.google.com/">Chat Room</a></li>
-            <li><a href="https://www.google.com/">FAQ</a></li>
-            <li><a href="https://www.google.com/">About Us</a></li>
-            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Languages<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a style="color: rgb(189, 183, 183)" href="#">English</a></li>
-                <li><a style="color: rgb(189, 183, 183)" href="#">German</a></li>
-                <li><a style="color: rgb(189, 183, 183)" href="#">Persian</a></li>
-                <li><a style="color: rgb(189, 183, 183)" href="#">Italian</a></li>
-              </ul>
-            </li>
-            <li><a onclick="document.getElementById('id01').style.display='block'" style="width:auto; padding-left: 7cm;">Login</a></li>
-            <li><a onclick="document.getElementById('id02').style.display='block'" style="width:auto;">Sign up</a></li>
-        </ul>
-            
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
 
-            <form class="navbar-form navbar-right" style= "padding-top: 1.5px; padding-right: 1px;" action="https://www.google.com/Search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" name="Search">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit">
-                                <i class="glyphicon glyphicon-search"></i>
-                            </button>
-                        </div>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="https://www.google.com/">Home</a></li>
+                <li><a href="https://www.google.com/">Chat Room</a></li>
+                <li><a href="https://www.google.com/">FAQ</a></li>
+                <li><a href="https://www.google.com/">About Us</a></li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Languages<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a style="color: rgb(189, 183, 183)" href="#">English</a></li>
+                        <li><a style="color: rgb(189, 183, 183)" href="#">German</a></li>
+                        <li><a style="color: rgb(189, 183, 183)" href="#">Persian</a></li>
+                        <li><a style="color: rgb(189, 183, 183)" href="#">Italian</a></li>
+                    </ul>
+                </li>
+                <li><a onclick="document.getElementById('id01').style.display='block'" style="width:auto; padding-left: 7cm;">Login</a></li>
+                <li><a onclick="document.getElementById('id02').style.display='block'" style="width:auto;">Sign up</a></li>
+            </ul>
+
+
+            <form class="navbar-form navbar-right" style="padding-top: 1.5px; padding-right: 1px;" action="https://www.google.com/Search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="Search">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
                     </div>
-            </form> 
+                </div>
+            </form>
+        </div>
+    </nav>
+
+    <h1>Moin Moin</h1>
+    <div id="id01" class="modal">
+
+        <form class="modal-content animate" action="/action_page.php">
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <img src="5.gif" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="container">
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" required>
+                <br>
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" required>
+                <br>
+                <button id="loginButton" style="background-color:rgb(49, 83, 53);" type="submit">Login</button>
+                <br>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+                <br>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button><br>
+                <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+        </form>
     </div>
-</nav>
-
-<h1>Moin Moin</h1>
-<div id="id01" class="modal">
-  
-    <form class="modal-content animate" action="/action_page.php">
-      <div class="imgcontainer">
-        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-        <img src="5.gif" alt="Avatar" class="avatar">
-      </div>
-  
-      <div class="container">
-        <label for="uname"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="uname" required>
-        <br>
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
-        <br>  
-        <button style="background-color:rgb(49, 83, 53);" type="submit">Login</button>
-        <br>
-        <label>
-          <input type="checkbox" checked="checked" name="remember"> Remember me
-        </label>
-        <br>
-      </div>
-  
-      <div class="container" style="background-color:#f1f1f1">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button><br>
-        <span class="psw">Forgot  <a href="#">password?</a></span>
-      </div>
-    </form>
-  </div>
 
 
-  <div id="id02" class="modal">
-  <form class="modal-content animate" action="/action_page.php">
-    <div class="container">
-            <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
-      
-      <h4>Please fill your information and create an account.</h4>
-      <hr>
-      <br>
-      <label for="email"><b>Email</b></label>
-      
-      <input type="text" placeholder="Enter Email" name="email" required>
-      
-      <label for="psw"><b>Password</b></label>
-      
-      <input type="password" placeholder="Enter Password" name="psw" required>
-      
-      <label for="psw-repeat"><b>Repeat Password</b></label>
-      
-      <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
-      <hr>
-      <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-      <button type="submit" class="registerbtn">Register</button>
+    <div id="id02" class="modal">
+        <form class="modal-content animate" action="/action_page.php">
+            <div class="container">
+                <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+
+                <h4>Please fill your information and create an account.</h4>
+                <hr>
+                <br>
+                <label for="email"><b>Email</b></label>
+
+                <input type="text" placeholder="Enter Email" name="email" required>
+
+                <label for="psw"><b>Password</b></label>
+
+                <input type="password" placeholder="Enter Password" name="psw" required>
+
+                <label for="psw-repeat"><b>Repeat Password</b></label>
+
+                <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+                <hr>
+                <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+                <button type="submit" class="registerbtn">Register</button>
+            </div>
+
+            <div class="container signin">
+                <p>Already have an account? <a href="#">Sign in</a>.</p>
+            </div>
+        </form>
     </div>
-    
-    <div class="container signin">
-      <p>Already have an account? <a href="#">Sign in</a>.</p>
+
+
+
+
+    <div class="w3-content w3-section">
+        <img class="mySlides" src="7.jpg">
+        <img class="mySlides" src="8.jpg">
+        <img class="mySlides" src="9.jpg">
     </div>
-  </form>
-  </div>
 
-
-
-
-<div class="w3-content w3-section">
-    <img class="mySlides" src="7.jpg">
-    <img class="mySlides" src="8.jpg">
-    <img class="mySlides" src="9.jpg">
-  </div>
-  
-  <script>
+    <script>
         var myIndex = 0;
         carousel();
-        
+
         function carousel() {
             var i;
             var x = document.getElementsByClassName("mySlides");
             for (i = 0; i < x.length; i++) {
-               x[i].style.display = "none";  
+                x[i].style.display = "none";
             }
             myIndex++;
-            if (myIndex > x.length) {myIndex = 1}    
-            x[myIndex-1].style.display = "block";  
+            if (myIndex > x.length) { myIndex = 1 }
+            x[myIndex - 1].style.display = "block";
             setTimeout(carousel, 2000);
-        } 
-        </script>
- 
-<div style="padding:20px 20px 20px 700px"> </div>
-
-<script>
-    window.onscroll = function() {scrollFunction()};
-    function scrollFunction() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            document.getElementById("navbar").style.top = "0";
-        } else {
-            document.getElementById("navbar").style.top = "-50px";
         }
-    }
-    
-    var modal = document.getElementById('id01');
+        $(document).ready(function () {
+            $("#loginButton").click(function (e) {
+                alert()
+                // var settings = {
+                //     "async": true,
+                //     "crossDomain": true,
+                //     "url": "http://localhost:8000/",
+                //     "method": "GET",
+                //     "headers": {
+                //         "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViZjg3OTJhMWYxODJjMzRlODU4NmIzMyIsImlhdCI6MTU0MzAxMDc4NCwiZXhwIjoxNTQzMDk3MTg0fQ.yZMa2zBRaZyYlbAiEDCQEmhYk71cmB2m7fT-duQCSoE",
+                //         "cache-control": "no-cache",
+                //         "Postman-Token": "e3838c74-c814-4365-8cba-93b3cc890fa2"
+                //     }
+                // }
 
+                // $.ajax(settings).done(function (response) {
+                //     console.log(response);
+                // });
+            })
+        })
+    </script>
 
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
-<script>
-        window.onscroll = function() {scrollFunction()};
+    <div style="padding:20px 20px 20px 700px"> </div>
+
+    <script>
+        window.onscroll = function () { scrollFunction() };
         function scrollFunction() {
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
                 document.getElementById("navbar").style.top = "0";
@@ -345,15 +347,35 @@ window.onclick = function(event) {
                 document.getElementById("navbar").style.top = "-50px";
             }
         }
-        
-        var modal = document.getElementById('id02');
-    
-    
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+
+        var modal = document.getElementById('id01');
+
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
-    }
     </script>
- </body>
+    <script>
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("navbar").style.top = "0";
+            } else {
+                document.getElementById("navbar").style.top = "-50px";
+            }
+        }
+
+        var modal = document.getElementById('id02');
+
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
 </html>

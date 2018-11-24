@@ -1,6 +1,7 @@
 
 var express = require('express')
 var app = express()
+var serveStatic = require('serve-static')
 
 const middleswares = require("./middlewares")
 const webtoken = require("./webtoken")
@@ -26,9 +27,9 @@ MongoClient.connect(url, function (err, db) {
 app.get("/", function(req, res){
   console.log(req.token)
   if(req.token.isAuthenticated){
-    res.send ('You are authenticated User')
+    res.send ({ status: 200, data: 'You are authenticated User'})
   }else{
-    res.send('You are not authenticated User')
+    res.send({status: 400, data: 'You are not authenticated User'})
   }
 })
 app.post('/login', function (req, res) {
@@ -44,11 +45,14 @@ app.post('/login', function (req, res) {
         }, function(err, result) {
             if (err) throw err;
             if(result) {
-                res.send(webtoken.generate(result))
+                res.send({
+                  status: 200,
+                  data: webtoken.generate(result)}
+                                    )
             }
             else {
                 res.send({
-                    error: 'invalid credentials'
+                    data: 401
                   })
             }
           });
@@ -72,14 +76,14 @@ app.post('/register', function (req, res) {
       },
             user => {
               res.send({
-                data: 'registration successful',
+                status: 201,
                 user: user
               })
             }
         )
   } else {
     res.send({
-      error: 'email and password should be provided'
+      status: 400 
     })
   }
 })
