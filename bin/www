@@ -4,51 +4,41 @@
  * Module dependencies.
  */
 
-let app = require('../app');
-let debug = require('debug')('grabIT:server');
-let http = require('http');
-//let WebSocketServer = require('websocket').server;
+var app = require('../app');
+var debug = require('debug')('testproject-webstorm:server');
+var http = require('http');
 
 
-let chatclass = require('./chat_class');
+var WebSocketServer = require('websocket').server;
 
 /**
  * Get port from environment and store in Express.
  */
 
-let port = normalizePort(process.env.PORT || '8080');
+var port = normalizePort(process.env.PORT || '8080');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-let server = http.createServer(app);
-/*let wsServer = new WebSocketServer({
+var server = http.createServer(app);
+
+
+
+
+//test create websocketserver (from https://medium.com/@martin.sikora/node-js-websocket-simple-chat-tutorial-2def3a841b61)
+wsServer = new WebSocketServer({
     httpServer: server
-});*/
-let wsServer = require('socket.io')(server);
-/**
- * Listen on provided port, on all network interfaces.
- */
+});
 
-let chat = new chatclass(wsServer);
-
-server.listen(port);
-//server.on('error', onError);
-//server.on('listening', onListening);
-
-// WebSocket server
 /*
 wsServer.on('request', function(request) {
-    let connection = request.accept(null, request.origin);
-
-    console.log('function on called');
+    var connection = request.accept(null, request.origin);
 
     // This is the most important callback for us, we'll handle
     // all messages from users here.
     connection.on('message', function(message) {
-        console.log(message);
         if (message.type === 'utf8') {
             // process WebSocket message
         }
@@ -57,27 +47,41 @@ wsServer.on('request', function(request) {
     connection.on('close', function(connection) {
         // close user connection
     });
-});
-*/
+});*/
 
-wsServer.on('connection', function(socket){
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
-    socket.on('chat message', function(msg){
-        console.log('message: ' + msg);
-        chat.broadcastMessage(msg);
-    });
+
+wsServer.on("connection", (websocket) => {
+    console.info("websocket connection open");
+
+    if (websocket.readyState === websocket.OPEN) {
+        websocket.send(JSON.stringify({
+            msg1: 'yo, im msg 1'
+        }))
+
+        setTimeout(() => {
+            websocket.send(JSON.stringify({
+                msg2: 'yo, im a delayed msg 2'
+            }))
+        }, 1000)
+    }
 });
 
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-  let port = parseInt(val, 10);
+  var port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
@@ -101,7 +105,7 @@ function onError(error) {
     throw error;
   }
 
-  let bind = typeof port === 'string'
+  var bind = typeof port === 'string'
     ? 'Pipe ' + port
     : 'Port ' + port;
 
@@ -125,9 +129,10 @@ function onError(error) {
  */
 
 function onListening() {
-  let addr = server.address();
-  let bind = typeof addr === 'string'
+  var addr = server.address();
+  var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
