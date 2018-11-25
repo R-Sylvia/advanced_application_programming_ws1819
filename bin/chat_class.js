@@ -10,4 +10,8 @@ module.exports = class Chat {
     broadcastMessage(msg) {
         this.webSocketServer.emit('chat message', msg);
     }
+
+    sendPrivate(msg, socketid) {
+        this.webSocketServer.to(socketid).emit(msg);
+    }
 }

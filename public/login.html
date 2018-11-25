@@ -11,19 +11,24 @@
     <link href="stylesheets/loginStyleSheet.css" rel="stylesheet" />
     <title>GrabIT Login</title>
 </head>
+
 <body>
     <div class="login-box">
         <img src="images/avatar.png" class="avatar"/>
         <h1>Login</h1>
             <form>
                 <p>Username</p>
-                <input type="text" name="username" placeholder="Enter Username"/>
+                <input type="text" name="username" id="username" placeholder="Enter Username"/>
                 <p>Password</p>
-                <input type="password" name="password" placeholder="Enter Password"/>
+                <input type="password" name="password" id="password" placeholder="Enter Password"/>
                 <input type="submit" name="submit" value="Login"/>
                 <a href="#">New here? SignUP!</a>
             </form>
     </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="./javascripts/login.js"> </script>
     <!--
     <div class="grid_header">
         <div class="title" style="line-height:22px">
