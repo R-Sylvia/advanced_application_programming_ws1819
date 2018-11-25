@@ -224,17 +224,18 @@ button:hover {
     width: 80%;
 }
 .chatform{
-    margin-top:10px;
+    margin-top:5px;
     display:flex;
     align-items: flex-start;
 }
 .chatform textarea {
     width: 75%;
-    height: 20px;
+    height: 25px;
     border: 2px solid #eee;
     border-radius: 3px;
     resize: none;
-    background:transparent;
+    background: transparent;
+    overflow-y: scroll;
 }
 .chatform textarea:focus{
     background:#fff;
