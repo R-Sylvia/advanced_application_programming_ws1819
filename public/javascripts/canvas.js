@@ -4,6 +4,9 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.height -= 87;
 
+
+console.log('message js active');
+
 var c = canvas.getContext('2d');
 
 var mouse = {
