@@ -114,23 +114,29 @@ input, select {
 /* ------------ MOBILE VERSION ------------ */
 /* **************************************** */
 
-body {
+.canvas {
+    width: 100%;
+    height: 100%;
     margin: 0;
-    padding: 0;
-    background: url(background.jpg);
-    background-size: cover;
-    background-position: center;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    background: rgb(237, 222, 241);
+    /*background-size: cover;
+    background-position: center;*/
     font-family: 'DejaVu Serif', 'Times New Roman';
 }
 
-.login-box{
+.login-box {
     width: 320px;
     height: 420px;
-    background:rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.5);
     color: #fff;
     top: 50%;
     left: 50%;
-    position:absolute;
+    position: absolute;
     transform: translate(-50%, -50%);
     box-sizing: border-box;
     padding: 70px 30px;
@@ -170,7 +176,7 @@ h1{
     height: 40px;
     color: #fff;
 }
-.login-box input[type=submit]{
+.login-box input[type=submit], input[type=button]{
     border: none;
     outline: none;
     height: 30px;
@@ -183,6 +189,11 @@ h1{
     cursor: pointer;
     background-color: mediumslateblue;
     color:#000;
+}
+.login-box input[type=button]:hover {
+    cursor: pointer;
+    background-color: mediumslateblue;
+    color: #000;
 }
 .login-box a{
     text-decoration: none;
