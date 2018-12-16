@@ -150,6 +150,7 @@ app.post('/login', function (req, res) {
     }
 })
 
+// TODO check if username is already chosen
 // register function
 app.post('/register', function (req, res) {
     const body = req.body
@@ -174,6 +175,13 @@ app.post('/register', function (req, res) {
         })
     }
 })
+
+app.get("/menu", function(req, res){
+    console.log("call ended here")
+    res.sendFile(__dirname + '/public/menu.html')
+})
+
+
 
 // helper function
 function insertUser (user, cb) {
