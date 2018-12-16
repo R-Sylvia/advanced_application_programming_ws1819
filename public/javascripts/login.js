@@ -40,7 +40,8 @@ $(function () {
             var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "http://localhost:8080/login",
+                "url": "http://192.168.178.20:8080/login",    // Home
+                //"url": "http://149.222.154.38:8080/login", // FH
                 "method": "POST",
                 "headers": {
                     "Content-Type": "application/json"
@@ -54,12 +55,25 @@ $(function () {
                     console.log("login was successful")
                     console.log(response.data)
                     localStorage.setItem("token", response.data)
-                    window.location.href = "index.html"
+                    window.location.href = "menu.html"
                 } else {
                     console.log('connection was not successfull');
                     alert("khabaret")
                 }
             })
+
+        /*
+        jQuery.ajax({
+            url: '/menu',
+            type: "GET",
+            success: function(result){
+                console.log('result: ' + result);
+            },
+            error: function(error){
+                console.log('error: ' + error);
+            }
+        })*/
+            //document.location = "http://192.168.178.20:8080/menu"
         }
     );
 })
