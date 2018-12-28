@@ -20,7 +20,8 @@ $(function () {
                     "async": true,
                     "crossDomain": true,
                     //"url": "http://192.168.178.20:8080/register",   // home
-                    "url": "http://149.222.154.38:8080/register",  // FH
+                    "url": "http://192.168.20.13:8080/login",   // Home2
+                    //"url": "http://149.222.154.38:8080/register",  // FH
                     "method": "POST",
                     "headers": {
                         "Content-Type": "application/json"

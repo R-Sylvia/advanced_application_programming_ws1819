@@ -47,7 +47,6 @@ app.use('/', indexRouter);
 
 
 
-/*
 app.use(session({
     name: 'session',
     secret: 'random_string_goes_here',
@@ -62,7 +61,6 @@ app.use(session({
     }
 }));
 
-*/
 
 
 /*
@@ -106,14 +104,34 @@ app.use(function(req, res, next) {
 */
 
 
+app.get("/username", function(req, res){
+    console.log("try get username")
+    console.log("cookie max age: " + req.session.cookie.maxAge)
+    if (req.session.user === undefined) {
+        concole.log("no username")
+        res.send({status: 400, data: 'no username'})
+    } else {
+        console.log("username found: " + req.session.user)
+        res.send({status: 200, data: req.session.user})
+    }
+})
+
+app.post("/logout", function(req, res){
+    if (req.session.user) {
+        req.session.user = null
+    }
+    res.send({status: 200})
+})
 
 // checks if user is authenticated
 app.get("/", function(req, res){
-    console.log(req.token)
+    //console.log(req.token)
     if(req.token.isAuthenticated){
+        console.log('authenticated')
         res.send ({ status: 200, data: 'You are authenticated User'})
     }else{
         res.send({status: 400, data: 'You are not authenticated User'})
+        console.log('not authenticated')
     }
 })
 
@@ -131,12 +149,15 @@ app.post('/login', function (req, res) {
         }, function(err, result) {
             if (err) throw err;
             if(result) {
+                req.session.cookie.maxAge = 360000000000
+                req.session.user = email
                 res.send({
                     status: 200,
                     data: webtoken.generate(result)}
                 )
             }
             else {
+                req.session.cookie.user = null
                 res.send({
                     data: 401
                 })
@@ -175,6 +196,7 @@ app.post('/register', function (req, res) {
         })
     }
 })
+
 
 app.get("/menu", function(req, res){
     console.log("call ended here")
