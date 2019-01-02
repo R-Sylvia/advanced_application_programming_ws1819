@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -9,6 +9,8 @@
     <style>
     </style>
     <link href="gameStylesheet.css" rel="stylesheet" />
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <title>GrabIT Game page</title>
 </head>
 <body>
@@ -20,54 +22,31 @@
                 <button class="button" type="button" onclick="window.location.href='menu.html'">Ex <letterspace style="letter-spacing:5px">IT</letterspace></button>
             </div>
         </div>
-        <div class="game"></div>
-        <div class="scoreboard">
-            SCOREBOARD
-            <div class="table">
-                <div class="scoreentry">
-                    <p class="number">1.</p>
-                    <p class="username">Batman</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">2.</p>
-                    <p class="username">Superman</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">3.</p>
-                    <p class="username">Spiderman</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">4.</p>
-                    <p class="username">Hulk</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">5.</p>
-                    <p class="username">Wonderwoman</p>
+        <div class="game">
+            <div class="scoreboard">
+                SCOREBOARD
+                <div class="table">
+                    <div class="scoreentry">
+                        <p class="number">1.</p>
+                        <p class="username">Batman</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="chatbox">
-            <div class="chatlogs">
-                <div class="chat">
-                    <p class="username">Peter</p>
-                    <p class="usermessage">Hallo, wie geht es dir?!</p>
+            <div class="chatbox">
+                <div class="chatlogs">
+                    <div class="chatentry">
+                        <p class="username">Peter</p>
+                        <p class="usermessage">Hallo, wie geht es dir?!</p>
+                    </div>
                 </div>
-                <div class="chat">
-                    <p class="username">Hans</p>
-                    <p class="usermessage">Hallo! Es geht mir gut!</p>
-                </div>
-                <div class="chat">
-                    <p class="username">Michel</p>
-                    <p class="usermessage">sdgsg dfghdfhgh dfghfghs erghh rh  sdgh dfgdfg sdfasdfgasdfga sdfg dfgsdfgsdfg sdfgdsfgfgh thrthrthr rtherrhrt rtggrs</p>
-                </div>
-                <div class="chat">
-                    <p class="username">Michel</p>
-                    <p class="usermessage">sdgsg dfghdfhgh dfghfghs erghh rh  sdgh dfgdfg sdfasdfgasdfga sdfg dfgsdfgsdfg sdfgdsfgfgh thrthrthr rtherrhrt rtggrs</p>
+                <div class="chatform">
+                    <textarea></textarea>
+                    <button>Send</button>
                 </div>
             </div>
-            <div class="chatform">
-                <textarea></textarea>
-                <button>Send</button>
+            <div class="canvas">
+                <canvas class="canvas"></canvas>
+                <script src="canvas.js"></script>
             </div>
         </div>
     </div>
