@@ -29,7 +29,6 @@ MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
 })
 
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -41,7 +40,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-
 
 
 
@@ -111,8 +109,12 @@ app.get("/username", function(req, res){
         concole.log("no username")
         res.send({status: 400, data: 'no username'})
     } else {
-        console.log("username found: " + req.session.user)
-        res.send({status: 200, data: req.session.user})
+        if (req.session.user === null) {
+            res.send({status: 400, data: 'no username'})
+        } else {
+            console.log("username found: " + req.session.user)
+            res.send({status: 200, data: req.session.user})
+        }
     }
 })
 
@@ -203,6 +205,17 @@ app.get("/menu", function(req, res){
     res.sendFile(__dirname + '/public/menu.html')
 })
 
+app.post("/startPlaying", function(req, res) {
+
+})
+
+app.post("/updatePosition", function(req, res) {
+    // update position
+
+    // send new positions to all players (playerarray
+
+    // send items to all players
+})
 
 
 // helper function
