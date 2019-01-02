@@ -16,8 +16,45 @@
 
 let socket = io();
 
+////////////////////////////////////////////////////
+//////////////  Setup environment  /////////////////
+////////////////////////////////////////////////////
+const canvas = document.getElementById("mycanvas");
+const renderer = new THREE.WebGLRenderer({canvas:canvas, antialias: true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setClearColor("black");
+const scene = new THREE.Scene();
+
+///////Camera
+const camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight,
+    0.1, 1000);
+const controls = new THREE.TrackballControls(camera, canvas);
+
+controls.rotateSpeed = 2;
+const clock = new THREE.Clock();
+const ambientLight = new THREE.AmbientLight(0x909090);
+scene.add(ambientLight);
+const light = new THREE.DirectionalLight(0x444444);
+light.position.set(1.5, 1, 1);
+scene.add(light);
+
 let username = null
 let playerid = null
+
+////////////////////////////////////////////////////
+////////  Global customizable parameters  //////////
+////////////////////////////////////////////////////
+const scaleFactor = 1/5;               //change size of all objects but keep proportions
+const myAvatar = {
+    height	   : 70*scaleFactor,
+    headRadius : 10*scaleFactor,
+    bodyWidth  : 15*scaleFactor
+};
+const avatars = new Array(5);
+let scores;   // array of scores received from server
+let itemsToGrab; // arrayof items received from server
 
 socket.on('connect', () => {
     console.log(socket.id)
@@ -62,6 +99,43 @@ function getUserName() {
     return res
 }
 
+////////////////////////////////////////////////////
+////////////////  Render function  /////////////////
+////////////////////////////////////////////////////
+function render() {
+    //called every 30or 60ms
+    requestAnimationFrame(render);
+    controls.update();
+    renderer.render(scene, camera);
+    // send position update
+}
+
+// supportfunctions:
+
+// createPlayingField
+
+// createFence
+
+// createAvatars
+
+// randomColor
+
+// createHead
+
+// createBody
+
+// createLegs
+
+// createArms
+
+// moveJoints
+
+// getPlayerIndex -> playerid
+
+// mycb
+
+//update function to update avatar array from server array with positions
+
 function startGame() {
     ans = getUserName()
 
@@ -75,6 +149,11 @@ function startGame() {
             } else {
                 playerid = responsedata.id
                 console.log("entered game " + playerid)
+                // initialise avatar arrays and so on
+                for (let i=0;i<5;++i){
+                    avatars[i] = new THREE.Object3D();
+                }
+
             }
         } );
     } else {
@@ -89,16 +168,20 @@ function startGame() {
 
         socket.on('avatar positions', function (msg) {
             // render new gamefield
+            // update avatar array with avatar position array of server
             console.log("received avatar message")
         });
 
         socket.on('item positions', function (msg) {
             // render new gamefield
+            // reset item array
+            // itemsToGrab = msg.items;
             console.log("received item message")
         });
 
         socket.on('current scores', function (msg) {
             // render new gamefield
+            // reset score array
             console.log("received scores message")
         });
 
@@ -109,6 +192,8 @@ function startGame() {
 
         // react on userinput
 
+    // rendering function call here
+    render();
 }
 
 

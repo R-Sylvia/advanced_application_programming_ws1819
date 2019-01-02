@@ -105,7 +105,8 @@ wsServer.on('connection', function(socket){
     })
 
     socket.on('position update', function(msg){
-        // send answer
+        // trigger collisiotn detection
+        // new item array sent if new
     })
 
     socket.on('player quits', function(msg){
