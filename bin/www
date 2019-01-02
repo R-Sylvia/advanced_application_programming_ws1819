@@ -11,7 +11,9 @@ let http = require('http');
 
 
 let chatclass = require('./chat_class');
-
+let gameclass = require('./game_logic');
+let game = new gameclass(5);
+let currentPlayerCount = 0;
 /**
  * Get port from environment and store in Express.
  */
@@ -33,6 +35,8 @@ let wsServer = require('socket.io')(server);
  */
 
 let chat = new chatclass(wsServer);
+
+
 
 server.listen(port);
 //server.on('error', onError);
@@ -60,15 +64,6 @@ wsServer.on('request', function(request) {
 });
 */
 
-http.get({
-    hostname: 'localhost',
-    port: 8080,
-    path: '/',
-    agent: false  // create a new agent just for this one request
-}, (res) => {
-    // Do stuff with response
-    console.log('haeae');
-});
 
 wsServer.on('connection', function(socket){
     console.log('a user connected');
@@ -78,8 +73,51 @@ wsServer.on('connection', function(socket){
     });
     socket.on('chat message', function(msg){
         console.log('message: ' + msg);
-        chat.broadcastMessage(msg);
+        chat.broadcastMessage('chat message', msg);
     });
+
+    // a new player wants to jon the game
+    socket.on('start play', function(msg, callbackfn) {
+        if (currentPlayerCount === 0) {
+            game.initialise()
+        }
+        // try add player
+        let ans = game.addPlayer(msg);
+        if (ans === false) {
+            console.log("can not add player")
+            callbackfn({answer: false})
+        } else {
+            console.log("added new player")
+            socket.join(chat.getRoomName())
+            currentPlayerCount += 1;
+            // answer the player with his id
+            callbackfn({answer: true, id: ans})
+
+            // broadcast a message to all current players
+            chat.broadcastToRoom('chat message', msg.user + ' i entered the game')
+            // broadcast avatar array
+            chat.broadcastToRoom('avatar positions', {avatars: game.getPlayers()})
+            // broadcast item array
+            chat.broadcastToRoom('item positions', {items: game.getItems()})
+            // broadcast scores
+            chat.broadcastToRoom('item positions', {scores: game.getScores()})
+        }
+    })
+
+    socket.on('position update', function(msg){
+        // send answer
+    })
+
+    socket.on('player quits', function(msg){
+        // remove the player from game by id
+        game.removePlayer(msg.id);
+        // remove socket from room
+        socket.leave(chat.getRoomName());
+        // update avatar list for other players
+        chat.broadcastToRoom('avatar positions', {avatars: game.getPlayers()})
+        // tell other players about leaving
+        chat.broadcastToRoom('chat message', msg.user + ': i left the game')
+    })
 
     socket.on('login', function(msg){
         console.log('login msg:' + msg);
