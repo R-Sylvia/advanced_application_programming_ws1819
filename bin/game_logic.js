@@ -69,20 +69,119 @@ module.exports = class GameBase {
         return this.itemsToGrab;
     }
 
-    // createItems
 
-    // randomColor
+	////////////////////////////////////////////////////
+	///////////////  SERVER GAME LOGIC    //////////////
+	////////////////////////////////////////////////////
 
-    // randomGeometry
+	function createItems(){
+		/*
+		Description: 
+			This function creates the items that populate the field
+		@return: 
+			void
+		*/
+		"use strict";
+		for (let i=0;i<itemsToGrab.length;++i){
+			let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+			let geometry = randomGeometry();
+			let offset = 0;
+			let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
+													shininess: 50, 
+													color:randomColor()});
+			itemsToGrab[i] = new THREE.Mesh(geometry, material);
+			if(geometry.type === "SphereGeometry"){
+				offset = geometry.parameters.radius;
+			}
+			if(geometry.type === "BoxGeometry"){
+				offset = geometry.parameters.height/2;
+			}
+			if(geometry.type === "CylinderGeometry"){
+				offset = geometry.parameters.height/2;
+			}
+			itemsToGrab[i].position.y = offset+0.01;
+			itemsToGrab[i].position.x = myWorld.edge1  * 9/10 * (Math.random()-0.5);
+			itemsToGrab[i].position.z = myWorld.edge2  * 9/10 * (Math.random()-0.5);
+			scene.add(itemsToGrab[i]);
+		}
+	}
 
-    // randomSize
 
-    // detectCollision
+	function randomColor(){
+		/*
+		Description:
+			This function selects a random color
+		@return: THREE.Color
+			Random color
+		*/
+		"use strict";
+		const color = new THREE.Color(Math.random(), Math.random(), Math.random());
+		return color;
+	}
 
 
-    /**
-     * function that checks if any player has hit an object and reacts on that (e.g. delete something from the object list, update points
-     */
-// function collisionDetection()...
+	function randomGeometry(){
+		/*
+		This function selects a random geometrical object among a few predefined options
+		@return: Three.Geometry
+			Geometry of the random object
+		*/
+		"use strict";
+		const selectGeo = Math.random();
+		if(selectGeo < 1/3){
+			return new THREE.SphereGeometry(randomSize(), 10, 10);
+		}
+		else if(selectGeo < 2/3){
+			let size = randomSize();
+			return new THREE.CylinderGeometry(size, size, size, 16);
+		}
+		else{
+			let size = randomSize();
+			return new THREE.BoxGeometry(size, size, size);
+		}
+	}
 
+	function randomSize(){
+		/*
+		This function selects a random size within a range
+		@return: Number
+			Number denoting random size
+		*/
+		"use strict";
+		return myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+	}
+
+    function detectCollision(j){
+	/*
+    Description: 
+        This function detects the contact between the avatars and the items
+    @input j: number
+        player number
+    @return: 
+        void
+    */
+    "use strict";
+    for (let i=0;i<itemsToGrab.length;++i){
+    	let dist;
+    	let distance2D = Math.sqrt(Math.pow(avatars[j].position.x-itemsToGrab[i].position.x,2)+
+			Math.pow(avatars[j].position.z-itemsToGrab[i].position.z,2));
+    	if(itemsToGrab[i].geometry.type === "SphereGeometry"){
+			dist = itemsToGrab[i].geometry.parameters.radius;
+		}
+		else if(itemsToGrab[i].geometry.type === "BoxGeometry"){
+			dist = itemsToGrab[i].geometry.parameters.width*1.2;
+		}
+		else if(itemsToGrab[i].geometry.type === "CylinderGeometry"){
+			dist = itemsToGrab[i].geometry.parameters.radiusTop;
+		}
+		else{
+			dist = 0;
+		}
+		if(	distance2D <= dist){
+			scene.remove(itemsToGrab[i]);
+			itemsToGrab.splice(i,1);//update clients with this IF CHANGED (FLAG)
+			++scores[j];
+		}
+	}
+	}
 }
