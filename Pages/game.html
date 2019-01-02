@@ -32,23 +32,52 @@
                     </div>
                 </div>
             </div>
-            <div class="chatbox">
-                <div class="chatlogs">
-                    <div class="chatentry">
-                        <p class="username">Peter</p>
-                        <p class="usermessage">Hallo, wie geht es dir?!</p>
+            <div id="messageArea" class="row">
+                <div class="chatbox">
+                    <div class="chatlogs">
+                        <div class="chatentry" id="chatentry"></div>
                     </div>
-                </div>
-                <div class="chatform">
-                    <textarea></textarea>
-                    <button>Send</button>
+                    <form id="messageForm">
+                        <div class="chatform">
+                            <textarea class="form-control" id="message"></textarea>
+                            <input type="submit" class="SendBtn" value="Send"/>
+                        </div>
+                    </form>
                 </div>
             </div>
+            
             <div class="canvas">
                 <canvas class="canvas"></canvas>
                 <script src="canvas.js"></script>
             </div>
         </div>
     </div>
+    <script>
+        var socket = io.connect();
+        var $messageForm = $('#messageForm');
+        var $message = $('#message');
+        var $chatentry = $('#chatentry');
+
+        //Client presses "Send" button for sending the message
+        $messageForm.submit(function (e) {
+            e.preventDefault();
+            socket.emit('send message', $message.val());
+            $message.val('');
+        });
+        //SERVER SIDE CODE
+        /*
+        //Send Message
+        socket.on('send message', function (data) {
+        io.sockets.emit('new message', { msg: data, user: socket.username });
+        });
+        */
+
+        //Receiving new message and displaying it
+        socket.on('new message', function (data) {
+            $chatentry.append('<p class="username"><strong>' + data.user + '</strong>:</div>');
+            $chatentry.append('<p class="usermessage">' + data.msg + '</div>');
+        })
+
+    </script>
 </body>
 </html>
