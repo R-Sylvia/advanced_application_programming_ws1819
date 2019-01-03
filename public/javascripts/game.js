@@ -120,18 +120,6 @@ createAvatars();
 createItems();
 
 ////////////////////////////////////////////////////
-////////////////  Render function  /////////////////
-////////////////////////////////////////////////////
-function render() {
-  //called every 30or 60ms
-  updateAvatarPos();
-  requestAnimationFrame(render);
-  controls.update();
-  renderer.render(scene, camera);
-  // send position update, i.e. send avatar[playerID].position - how to?
-}
-
-////////////////////////////////////////////////////
 /////////////  Create Playing field  ///////////////
 ////////////////////////////////////////////////////
 
@@ -449,6 +437,20 @@ function updateAvatarPos(){
 	}
 }
 
+////////////////////////////////////////////////////
+////////////////  Render function  /////////////////
+////////////////////////////////////////////////////
+function render() {
+  //called every 30or 60ms
+  updateAvatarPos();
+  requestAnimationFrame(render);
+  controls.update();
+  renderer.render(scene, camera);
+  // send position update, i.e. send avatar[playerID].position - how to?
+}
+
+render();
+
 //TODO
 //function creating items in the field based on server-side creation
 //function updating items in the field based on server-side detect collision results
@@ -512,7 +514,6 @@ function startGame() {
         // react on userinput
 
     // rendering function call here
-    render();
 }
 
 
