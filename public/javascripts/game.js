@@ -84,6 +84,7 @@ function startGame() {
 
         socket.on('chat message', function (msg) {
             // add message to chat
+            socket.emit('new message', { msg: data, user: username });
             console.log("received chat message")
         });
 
