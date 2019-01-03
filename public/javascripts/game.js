@@ -29,7 +29,7 @@ renderer.setClearColor("black");
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight,
     0.1, 1000);
-const controls = new THREE.TrackballControls(camera, canvas);
+const controls = new THREE.TrackballControls(camera, thiscanvas);
 controls.rotateSpeed = 2;
 const clock = new THREE.Clock();
 const ambientLight = new THREE.AmbientLight(0x909090);
@@ -443,7 +443,7 @@ function updateAvatarPos(){
 ////////////////////////////////////////////////////
 function render() {
     //called every 30or 60ms
-    updateAvatarPos();
+    //updateAvatarPos();
     requestAnimationFrame(render);
     controls.update();
     renderer.render(scene, camera);
