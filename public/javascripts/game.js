@@ -19,15 +19,16 @@ let socket = io();
 ////////////////////////////////////////////////////
 //////////////  Setup environment  /////////////////
 ////////////////////////////////////////////////////
-const canvas = document.getElementById("mycanvas");
-const renderer = new THREE.WebGLRenderer({canvas:canvas, antialias: true});
+const thiscanvas = document.getElementById("canvas");
+//console.log(thiscanvas)
+const renderer = new THREE.WebGLRenderer({canvas:thiscanvas, antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setClearColor("black");
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight,
-    										0.1, 1000);
+    0.1, 1000);
 const controls = new THREE.TrackballControls(camera, canvas);
 controls.rotateSpeed = 2;
 const clock = new THREE.Clock();
@@ -53,8 +54,8 @@ const numPlayers = 5;
 const avatars = new Array(numPlayers);
 const posAvatar = new Array(numPlayers);
 for (let i=0;i<numPlayers;++i){
-	avatars[i] = new THREE.Object3D();
-	posAvatar[i] = new Array(3); //3 dimensions x, y, z
+    avatars[i] = new THREE.Object3D();
+    posAvatar[i] = new Array(3); //3 dimensions x, y, z
 }
 const scores = new Array(numPlayers);   // array of scores received from server
 const itemsToGrab = new Array(100);
@@ -74,20 +75,20 @@ socket.on('connect', () => {
 });
 
 function usernameajax() {
-        var settings = {
-            "async": false,
-            "crossDomain": true,
-            //"url": "http://192.168.178.20:8080/username",    // Home
-            "url": "http://192.168.20.13:8080/username",   // Home2
-            //"url": "http://149.222.154.38:8080/username", // FH
-            "method": "GET",
-            "headers": {
-                "Content-Type": "application/json"
-            },
-            "processData": false
-        }
+    var settings = {
+        "async": false,
+        "crossDomain": true,
+        //"url": "http://192.168.178.20:8080/username",    // Home
+        "url": "http://192.168.20.13:8080/username",   // Home2
+        //"url": "http://149.222.154.38:8080/username", // FH
+        "method": "GET",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "processData": false
+    }
 
-        return $.ajax(settings)
+    return $.ajax(settings)
 
 }
 
@@ -125,9 +126,9 @@ createItems();
 
 function createPlayingField(){
     /*
-    Description: 
+    Description:
         This function creates the playing field
-    @return: 
+    @return:
         void
     */
     "use strict";
@@ -151,13 +152,13 @@ function createPlayingField(){
 
 function createFence(){
     /*
-    Description: 
+    Description:
         This function creates the fence delimiting the field
-    @return: 
+    @return:
         void
     */
     "use strict";
-	const geo = new THREE.BoxGeometry(myWorld.edge1, myAvatar.height, myAvatar.height/10);
+    const geo = new THREE.BoxGeometry(myWorld.edge1, myAvatar.height, myAvatar.height/10);
     geo.computeVertexNormals();
     const mat = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, shininess: 20, color:'red'});
     const fence1 = new THREE.Mesh(geo, mat);
@@ -183,163 +184,163 @@ function createFence(){
 
 function createAvatars(){
     /*
-    Description: 
+    Description:
         This function creates all the avatars
-    @return: 
+    @return:
         void
     */
     "use strict";
     for (let i=0;i<numPlayers;++i){
-    	let playerColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-		createHead(i, playerColor);
-		createBody(i, playerColor);
-		createLegs(i);
-		createArms(i);
-		scene.add(avatars[i]);
-		avatars[i].position.y = myAvatar.height/2;
-	}
-	avatars[playerID].add(camera);
+        let playerColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+        createHead(i, playerColor);
+        createBody(i, playerColor);
+        createLegs(i);
+        createArms(i);
+        scene.add(avatars[i]);
+        avatars[i].position.y = myAvatar.height/2;
+    }
+    avatars[playerID].add(camera);
 }
 
 function createHead(i, colore){
     /*
-    Description: 
+    Description:
         This function creates the head of the avatars
     Parameters:
     @input i: number
         player number
     @input colore: THREE.color
     	player color
-    @return: 
+    @return:
         void
     */
     "use strict";
     const geometry = new THREE.SphereGeometry(myAvatar.headRadius, 50, 50);
-    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
-												shininess: 200, 
-    											color:colore});
+    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
+        shininess: 200,
+        color:colore});
     const head = new THREE.Mesh(geometry, material);
-	head.position.y = myAvatar.height-myAvatar.headRadius;
-	avatars[i].add(head);
+    head.position.y = myAvatar.height-myAvatar.headRadius;
+    avatars[i].add(head);
 }
 
 function createBody(i, colore){
     /*
-    Description: 
+    Description:
         This function creates the body of the avatars
          Parameters:
     @input i: number
         player number
     @input colore: THREE.color
     	player color
-    @return: 
+    @return:
         void
     */
     "use strict";
-	const bodyX = myAvatar.bodyWidth*3/2;
-	const bodyY = myAvatar.bodyWidth*2.5;
-	const bodyZ = myAvatar.bodyWidth;
-	const geometry = new THREE.BoxGeometry(bodyX, bodyY, bodyZ);
-    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
-												shininess: 200, 
-    											color:colore});
+    const bodyX = myAvatar.bodyWidth*3/2;
+    const bodyY = myAvatar.bodyWidth*2.5;
+    const bodyZ = myAvatar.bodyWidth;
+    const geometry = new THREE.BoxGeometry(bodyX, bodyY, bodyZ);
+    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
+        shininess: 200,
+        color:colore});
     const body = new THREE.Mesh(geometry, material);
-	body.position.y = myAvatar.height-2*myAvatar.headRadius-bodyY/2;
-	avatars[i].add(body);
+    body.position.y = myAvatar.height-2*myAvatar.headRadius-bodyY/2;
+    avatars[i].add(body);
 }
 
 function createLegs(i){
     /*
-    Description: 
+    Description:
         This function creates the legs of the avatars
     @input i: number
         player number
-    @return: 
+    @return:
         void
     */
-    "use strict";	
-	const radiusLegs = myAvatar.bodyWidth/3;
-	const lengthLegs = myAvatar.height-myAvatar.headRadius/2-myAvatar.bodyWidth*2.5/2;
-	const geometry = new THREE.CylinderGeometry(radiusLegs, radiusLegs, lengthLegs, 32 );
-    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
-												shininess: 200, 
-    											color:"blue"});
+    "use strict";
+    const radiusLegs = myAvatar.bodyWidth/3;
+    const lengthLegs = myAvatar.height-myAvatar.headRadius/2-myAvatar.bodyWidth*2.5/2;
+    const geometry = new THREE.CylinderGeometry(radiusLegs, radiusLegs, lengthLegs, 32 );
+    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
+        shininess: 200,
+        color:"blue"});
     const leg1 = new THREE.Mesh(geometry, material);
-	leg1.position.y = myAvatar.height
-						-2*myAvatar.headRadius
-						-myAvatar.bodyWidth*2.5
-						-lengthLegs/2-0.01;
-	const leg2 = leg1.clone();
-	leg1.position.x -= myAvatar.bodyWidth*3/8;
-	leg2.position.x += myAvatar.bodyWidth*3/8;
-	leg1.position.z += myAvatar.bodyWidth/5;
-	leg2.position.z -= myAvatar.bodyWidth/5;
-	leg1.rotation.x = -Math.PI/15;
-	leg2.rotation.x = +Math.PI/15;
-	joints[i] = -1;
-	avatars[i].add(leg1);
-	avatars[i].add(leg2);
+    leg1.position.y = myAvatar.height
+        -2*myAvatar.headRadius
+        -myAvatar.bodyWidth*2.5
+        -lengthLegs/2-0.01;
+    const leg2 = leg1.clone();
+    leg1.position.x -= myAvatar.bodyWidth*3/8;
+    leg2.position.x += myAvatar.bodyWidth*3/8;
+    leg1.position.z += myAvatar.bodyWidth/5;
+    leg2.position.z -= myAvatar.bodyWidth/5;
+    leg1.rotation.x = -Math.PI/15;
+    leg2.rotation.x = +Math.PI/15;
+    joints[i] = -1;
+    avatars[i].add(leg1);
+    avatars[i].add(leg2);
 }
 
 function createArms(i){
-	/*
-    Description: 
+    /*
+    Description:
         This function creates the arms of the avatars
     @input i: number
         player number
-    @return: 
+    @return:
         void
     */
     "use strict";
-	const radiusArms = myAvatar.bodyWidth/5;
-	const lengthArms = myAvatar.bodyWidth*3.5/2;
-	const geometry = new THREE.CylinderGeometry(radiusArms, radiusArms, lengthArms, 32 );
-    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
-												shininess: 200, 
-    											color:"blue"});
+    const radiusArms = myAvatar.bodyWidth/5;
+    const lengthArms = myAvatar.bodyWidth*3.5/2;
+    const geometry = new THREE.CylinderGeometry(radiusArms, radiusArms, lengthArms, 32 );
+    const material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
+        shininess: 200,
+        color:"blue"});
     const arm1 = new THREE.Mesh(geometry, material);
-	arm1.position.y = myAvatar.height-3.5*myAvatar.headRadius;
-	const arm2 = arm1.clone();
-	arm1.position.x -= myAvatar.bodyWidth;
-	arm2.position.x += myAvatar.bodyWidth;
-	arm1.position.z -= myAvatar.bodyWidth/5;
-	arm2.position.z += myAvatar.bodyWidth/5;
-	arm1.rotation.x = +Math.PI/12;
-	arm2.rotation.x = -Math.PI/12;
-	avatars[i].add(arm1);
-	avatars[i].add(arm2);
+    arm1.position.y = myAvatar.height-3.5*myAvatar.headRadius;
+    const arm2 = arm1.clone();
+    arm1.position.x -= myAvatar.bodyWidth;
+    arm2.position.x += myAvatar.bodyWidth;
+    arm1.position.z -= myAvatar.bodyWidth/5;
+    arm2.position.z += myAvatar.bodyWidth/5;
+    arm1.rotation.x = +Math.PI/12;
+    arm2.rotation.x = -Math.PI/12;
+    avatars[i].add(arm1);
+    avatars[i].add(arm2);
 }
 
 function moveJoints(){
-	/*
-    Description: 
+    /*
+    Description:
         This function moves the client's avatar joints
-    @return: 
+    @return:
         void
     */
     "use strict";
-	if(joints[playerID] < 0){
-		avatars[playerID].children[2].rotation.x += 2*Math.PI/15;
-		avatars[playerID].children[3].rotation.x -= 2*Math.PI/15;
-		avatars[playerID].children[4].rotation.x -= 2*Math.PI/12;
-		avatars[playerID].children[5].rotation.x += 2*Math.PI/12;
-		avatars[playerID].children[2].position.z -= 2*myAvatar.bodyWidth/5;
-		avatars[playerID].children[3].position.z += 2*myAvatar.bodyWidth/5;
-		avatars[playerID].children[4].position.z += 2*myAvatar.bodyWidth/5;
-		avatars[playerID].children[5].position.z -= 2*myAvatar.bodyWidth/5;
-		joints[playerID] = 1;
-	}
-	else{
-		avatars[playerID].children[2].rotation.x -= 2*Math.PI/15;
-		avatars[playerID].children[3].rotation.x += 2*Math.PI/15;
-		avatars[playerID].children[4].rotation.x += 2*Math.PI/12;
-		avatars[playerID].children[5].rotation.x -= 2*Math.PI/12;
-		avatars[playerID].children[2].position.z += 2*myAvatar.bodyWidth/5;
-		avatars[playerID].children[3].position.z -= 2*myAvatar.bodyWidth/5;
-		avatars[playerID].children[4].position.z -= 2*myAvatar.bodyWidth/5;
-		avatars[playerID].children[5].position.z += 2*myAvatar.bodyWidth/5;
-		joints[playerID] = -1;
-	}
+    if(joints[playerID] < 0){
+        avatars[playerID].children[2].rotation.x += 2*Math.PI/15;
+        avatars[playerID].children[3].rotation.x -= 2*Math.PI/15;
+        avatars[playerID].children[4].rotation.x -= 2*Math.PI/12;
+        avatars[playerID].children[5].rotation.x += 2*Math.PI/12;
+        avatars[playerID].children[2].position.z -= 2*myAvatar.bodyWidth/5;
+        avatars[playerID].children[3].position.z += 2*myAvatar.bodyWidth/5;
+        avatars[playerID].children[4].position.z += 2*myAvatar.bodyWidth/5;
+        avatars[playerID].children[5].position.z -= 2*myAvatar.bodyWidth/5;
+        joints[playerID] = 1;
+    }
+    else{
+        avatars[playerID].children[2].rotation.x -= 2*Math.PI/15;
+        avatars[playerID].children[3].rotation.x += 2*Math.PI/15;
+        avatars[playerID].children[4].rotation.x += 2*Math.PI/12;
+        avatars[playerID].children[5].rotation.x -= 2*Math.PI/12;
+        avatars[playerID].children[2].position.z += 2*myAvatar.bodyWidth/5;
+        avatars[playerID].children[3].position.z -= 2*myAvatar.bodyWidth/5;
+        avatars[playerID].children[4].position.z -= 2*myAvatar.bodyWidth/5;
+        avatars[playerID].children[5].position.z += 2*myAvatar.bodyWidth/5;
+        joints[playerID] = -1;
+    }
 }
 
 ////////////////////////////////////////////////////
@@ -347,106 +348,106 @@ function moveJoints(){
 ////////////////////////////////////////////////////
 
 function getPlayerID(){
-	/*
-    Description: 
+    /*
+    Description:
         This function returns the player ID
     @return: number
         player ID
     */
     "use strict";
-	return 0;//TODO, REPLACE WITH PLAYER ID ASSIGNED BY SERVER
+    return 0;//TODO, REPLACE WITH PLAYER ID ASSIGNED BY SERVER
 }
 
 function mycb(event){
     /*
-    Description: 
+    Description:
         This function moves the avatars
         according to the user´s input (d/a/e/q/w/s)
     Parameters:
     @input event: Keyboard-event
         Key pressed
-    @return: 
+    @return:
         void
     */
     "use strict";
-	const time = clock.getElapsedTime();
-	const stepDistance = myAvatar.bodyWidth*1.8;
-	if(gameOver){
-		alert("GAME OVER!!!");
-		return;
-	}
-	if(Math.abs(time - lastMoved) < 0.15){//For the human eyes sampling
-		return;
-	}
-	else{
-		lastMoved = time;
-	}
-	if(event.keyCode == 68){ //d  (right)
-		if(avatars[playerID].position.x + stepDistance < 495/1000*myWorld.edge2){
-			avatars[playerID].position.x += stepDistance;
-			moveJoints();
-		}
-		else{
-			return;
-		}
-	}
-	if(event.keyCode == 65){ //a  (left)
-		if(avatars[playerID].position.x - stepDistance > -495/1000*myWorld.edge2){
-			avatars[playerID].position.x -= stepDistance;
-			moveJoints();
-		}
-		else{
-			return;
-		}
-	}
-	if(event.keyCode == 87){ //w  (forward)
-		if(avatars[playerID].position.z - stepDistance > -495/1000*myWorld.edge1){
-			avatars[playerID].position.z -= stepDistance;
-			moveJoints();
-		}
-		else{
-			return;
-		}
-	}
-	if(event.keyCode == 83){ //s  (backward)
-		if(avatars[playerID].position.z + stepDistance < 495/1000*myWorld.edge2){
-			avatars[playerID].position.z += stepDistance;
-			moveJoints();
-		}
-		else{
-			return;
-		}
-	}
-	detectCollision(i);
+    const time = clock.getElapsedTime();
+    const stepDistance = myAvatar.bodyWidth*1.8;
+    if(gameOver){
+        alert("GAME OVER!!!");
+        return;
+    }
+    if(Math.abs(time - lastMoved) < 0.15){//For the human eyes sampling
+        return;
+    }
+    else{
+        lastMoved = time;
+    }
+    if(event.keyCode == 68){ //d  (right)
+        if(avatars[playerID].position.x + stepDistance < 495/1000*myWorld.edge2){
+            avatars[playerID].position.x += stepDistance;
+            moveJoints();
+        }
+        else{
+            return;
+        }
+    }
+    if(event.keyCode == 65){ //a  (left)
+        if(avatars[playerID].position.x - stepDistance > -495/1000*myWorld.edge2){
+            avatars[playerID].position.x -= stepDistance;
+            moveJoints();
+        }
+        else{
+            return;
+        }
+    }
+    if(event.keyCode == 87){ //w  (forward)
+        if(avatars[playerID].position.z - stepDistance > -495/1000*myWorld.edge1){
+            avatars[playerID].position.z -= stepDistance;
+            moveJoints();
+        }
+        else{
+            return;
+        }
+    }
+    if(event.keyCode == 83){ //s  (backward)
+        if(avatars[playerID].position.z + stepDistance < 495/1000*myWorld.edge2){
+            avatars[playerID].position.z += stepDistance;
+            moveJoints();
+        }
+        else{
+            return;
+        }
+    }
+    detectCollision(i);
 }
 document.addEventListener("keydown",mycb);
 
 function updateAvatarPos(){
-	/*
-    Description: 
+    /*
+    Description:
         This function updates the avatars positions for the renderer
-    @return: 
+    @return:
         void
     */
     "use strict";
     for (let i=0;i<numPlayers;++i){
-    	for (let j=0;i<3;++j){
-    		posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
-    	}
-    	avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
-	}
+        for (let j=0;i<3;++j){
+            posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
+        }
+        avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
+    }
 }
 
 ////////////////////////////////////////////////////
 ////////////////  Render function  /////////////////
 ////////////////////////////////////////////////////
 function render() {
-  //called every 30or 60ms
-  updateAvatarPos();
-  requestAnimationFrame(render);
-  controls.update();
-  renderer.render(scene, camera);
-  // send position update, i.e. send avatar[playerID].position - how to?
+    //called every 30or 60ms
+    updateAvatarPos();
+    requestAnimationFrame(render);
+    controls.update();
+    renderer.render(scene, camera);
+    // send position update, i.e. send avatar[playerID].position - how to?
 }
 
 render();
@@ -482,36 +483,36 @@ function startGame() {
         window.location.href = "menu.html"
     }
 
-        socket.on('chat message', function (msg) {
-            // add message to chat
-            console.log("received chat message")
-        });
+    socket.on('chat message', function (msg) {
+        // add message to chat
+        console.log("received chat message")
+    });
 
-        socket.on('avatar positions', function (msg) {
-            // render new gamefield
-            // update avatar array with avatar position array of server
-            console.log("received avatar message")
-        });
+    socket.on('avatar positions', function (msg) {
+        // render new gamefield
+        // update avatar array with avatar position array of server
+        console.log("received avatar message")
+    });
 
-        socket.on('item positions', function (msg) {
-            // render new gamefield
-            // reset item array
-            // itemsToGrab = msg.items;
-            console.log("received item message")
-        });
+    socket.on('item positions', function (msg) {
+        // render new gamefield
+        // reset item array
+        // itemsToGrab = msg.items;
+        console.log("received item message")
+    });
 
-        socket.on('current scores', function (msg) {
-            // render new gamefield
-            // reset score array
-            console.log("received scores message")
-        });
+    socket.on('current scores', function (msg) {
+        // render new gamefield
+        // reset score array
+        console.log("received scores message")
+    });
 
-        socket.on('game ends', function (msg) {
-            // show scores
-            console.log("received game end message")
-        });
+    socket.on('game ends', function (msg) {
+        // show scores
+        console.log("received game end message")
+    });
 
-        // react on userinput
+    // react on userinput
 
     // rendering function call here
 }

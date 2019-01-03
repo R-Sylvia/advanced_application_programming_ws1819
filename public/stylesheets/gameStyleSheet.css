@@ -2,11 +2,11 @@
 /* ----------- RESET STYLESHEET ----------- */
 /* **************************************** */
 
-/* 
+/*
 html5doctor.com Reset Stylesheet
 v1.6.1
 Last Updated: 2010-09-17
-Author: Richard Clark - http://richclarkdesign.com 
+Author: Richard Clark - http://richclarkdesign.com
 Twitter: @rich_clark
 */
 
@@ -40,19 +40,19 @@ footer, header, hgroup, menu, nav, section {
     display: block;
 }
 
-    nav ul {
-        list-style: none;
-    }
+nav ul {
+    list-style: none;
+}
 
 blockquote, q {
     quotes: none;
 }
 
-    blockquote:before, blockquote:after,
-    q:before, q:after {
-        content: '';
-        content: none;
-    }
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
 
 a {
     margin: 0;
@@ -114,17 +114,10 @@ input, select {
 /* ------------ MOBILE VERSION ------------ */
 /* **************************************** */
 
-body, html {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    background-image: url("Screenshot 2018-11-24 at 21.22.52.png");
-    background-size: cover;
-    background-position:center;
-}
-
 .wrapper {
     font-family: 'DejaVu Serif', 'Times New Roman';
+    width: 100%;
+    height: 100%;
 }
 
 .space {
@@ -164,20 +157,21 @@ button:hover {
 }
 
 .game {
-    grid-area: game;
     width: 100%;
     height: 100%;
-
+    margin: 0;
+    position: relative;
 }
 
 .scoreboard {
-   width: 200px;
-   height: 100px;
-   margin-left: 85%;
-   padding: 5px;
-   background-color:transparent;
-   color:aqua;
-   font-size:15px;
+    width: 200px;
+    height: 100px;
+    margin-left: 85%;
+
+    background-color:transparent;
+    color:aqua;
+    font-size:15px;
+    position:absolute;
 }
 
 .scoreentry {
@@ -185,6 +179,7 @@ button:hover {
     flex-flow: row wrap;
     align-items: flex-start;
     margin: 5px;
+    position:absolute;
 }
 
 .table {
@@ -192,6 +187,7 @@ button:hover {
     height:80%;
     overflow-x: hidden;
     overflow-y: scroll;
+    position:absolute;
 }
 
 .chatbox {
@@ -200,8 +196,10 @@ button:hover {
     height: 100px;
     background: rgba(0,0,0,0.5);
     color: #fff;
-    margin: 420px auto 0 5px;
+    margin: 410px auto 0 5px;
+    position:absolute;
 }
+
 .chatlogs{
     padding: 10px;
     width: 96%;
@@ -214,13 +212,15 @@ button:hover {
     margin-right: 7px;
     color:lawngreen;
 }
-.chat{
+
+.chatentry{
     display:flex;
     flex-flow:row wrap;
     align-items:flex-start;
     margin-bottom: 5px;
 }
-.chat .usermessage{
+
+.chatentry .usermessage{
     width: 80%;
 }
 .chatform{
@@ -228,6 +228,7 @@ button:hover {
     display:flex;
     align-items: flex-start;
 }
+
 .chatform textarea {
     width: 75%;
     height: 25px;
@@ -237,9 +238,11 @@ button:hover {
     background: transparent;
     overflow-y: scroll;
 }
+
 .chatform textarea:focus{
     background:#fff;
 }
+
 .chatform button{
     background:rgba(0,0,0,0.4);
     padding:7px 15px;
