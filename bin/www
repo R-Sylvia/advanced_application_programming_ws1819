@@ -96,7 +96,11 @@ wsServer.on('connection', function(socket){
             // broadcast a message to all current players
             chat.broadcastToRoom('chat message', msg.user + ' i entered the game')
             // broadcast avatar array
-            chat.broadcastToRoom('avatar positions', {avatars: game.getPlayers()})
+            chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
+                                                        second: JSON.stringify(game.getPlayers()[1]),
+                                                        third: JSON.stringify(game.getPlayers()[2]),
+                                                        fourth: JSON.stringify(game.getPlayers()[3]),
+                                                        fifth: JSON.stringify(game.getPlayers()[4])})
             // broadcast item array
             chat.broadcastToRoom('item positions', {items: game.getItems()})
             // broadcast scores
@@ -107,6 +111,12 @@ wsServer.on('connection', function(socket){
     socket.on('position update', function(msg){
         // trigger collisiotn detection
         // new item array sent if new
+        game.updatePlayerPosition(msg.id, JSON.parse(msg.position))
+        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
+                                                    second: JSON.stringify(game.getPlayers()[1]),
+                                                    third: JSON.stringify(game.getPlayers()[2]),
+                                                    fourth: JSON.stringify(game.getPlayers()[3]),
+                                                    fifth: JSON.stringify(game.getPlayers()[4])})
     })
 
     socket.on('player quits', function(msg){
@@ -115,7 +125,11 @@ wsServer.on('connection', function(socket){
         // remove socket from room
         socket.leave(chat.getRoomName());
         // update avatar list for other players
-        chat.broadcastToRoom('avatar positions', {avatars: game.getPlayers()})
+        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
+                                                    second: JSON.stringify(game.getPlayers()[1]),
+                                                    third: JSON.stringify(game.getPlayers()[2]),
+                                                    fourth: JSON.stringify(game.getPlayers()[3]),
+                                                    fifth: JSON.stringify(game.getPlayers()[4])})
         // tell other players about leaving
         chat.broadcastToRoom('chat message', msg.user + ': i left the game')
     })

@@ -115,6 +115,16 @@ function getUserName() {
                     createFence();
                     createAvatars();
 
+                    // just to try
+
+                    for (let i=0;i<numPlayers;++i){		// TODO only for those avatars who exist
+                        for (let j=0;j<3;++j){
+                            posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
+                        }
+                        avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
+                    }
+                    console.log('avatar positions initialised')
+
                 }
             } );
         } else {
@@ -434,7 +444,7 @@ function mycb(event){
             return;
         }
     }
-    detectCollision(i);
+    //detectCollision(i);
 }
 document.addEventListener("keydown",mycb);
 
@@ -446,11 +456,17 @@ function updateAvatarPos(){
         void
     */
     "use strict";
+
+    // try:
+
     for (let i=0;i<numPlayers;++i){		// TODO only for those avatars who exist
-        for (let j=0;i<3;++j){
+        /*for (let j=0;i<3;++j){
             posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
+        }*/
+        if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null) && (posAvatar[i][2] !== null)) {
+            avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
+            console.log('updated player: ' + i)
         }
-        avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
     }
 }
 
@@ -464,6 +480,13 @@ function render() {
     controls.update();
     renderer.render(scene, camera);
     // send position update, i.e. send avatar[playerID].position - how to?
+	if (gameRunning) {
+		posi = new Array(3)
+		posi[0] = avatars[playerID].position.x
+        posi[1] = avatars[playerID].position.y
+        posi[2] = avatars[playerID].position.z
+        socket.emit('position update', {id: playerID, position: JSON.stringify(posi)})
+    }
 }
 
 render();
@@ -509,6 +532,20 @@ function startGame() {
         // render new gamefield
         // update avatar array with avatar position array of server
         console.log("received avatar message")
+		if (gameRunning) {
+			posis = JSON.parse(msg.first)
+			posAvatar[0] = posis
+            posis = JSON.parse(msg.second)
+            posAvatar[1] = posis
+            posis = JSON.parse(msg.third)
+            posAvatar[2] = posis
+            posis = JSON.parse(msg.fourth)
+            posAvatar[3] = posis
+            posis = JSON.parse(msg.fifth)
+            posAvatar[4] = posis
+            updateAvatarPos()
+        }
+
     });
 
     socket.on('item positions', function (msg) {

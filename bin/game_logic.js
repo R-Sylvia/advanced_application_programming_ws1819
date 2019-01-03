@@ -22,7 +22,10 @@ module.exports = class GameBase {
         // current player count
         this.numPlayers = 0;
         for(let i = 0; i < this.maxPlayers; i++) {
-        	this.avatars[i] = null
+        	this.avatars[i] = new Array(3)
+			this.avatars[i][0] = null
+			this.avatars[i][1] = null
+			this.avatars[i][2] = null
 		}
 
         // initialise array itemsToGrab
@@ -33,7 +36,10 @@ module.exports = class GameBase {
         if (this.numPlayers < this.maxPlayers) {
             // add player
             this.numPlayers += 1
-            this.avatars[this.numPlayers - 1] = this.numPlayers //placeholder for: new THREE.Object3D(); start position 0,0,0
+			//this.avatars[this.numPlayers - 1] = new Array(3)
+            this.avatars[this.numPlayers - 1][0] = 0
+			this.avatars[this.numPlayers - 1][1] = 0
+            this.avatars[this.numPlayers - 1][2] = 0// = this.numPlayers //placeholder for: new THREE.Object3D(); start position 0,0,0
             this.scores[this.numPlayers - 1] = 0
             return this.numPlayers - 1  // new player's id
         } else {
@@ -51,7 +57,8 @@ module.exports = class GameBase {
     updatePlayerPosition(player, position) {    // position is a placeholder
         if (player < this.numPlayers) {
             // update player's position
-
+			//this.avatars[player] = position
+			this.avatars[player] = position
             // update scores and itemarray
             return true
         } else {
