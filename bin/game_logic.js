@@ -74,7 +74,7 @@ module.exports = class GameBase {
 	///////////////  SERVER GAME LOGIC    //////////////
 	////////////////////////////////////////////////////
 
-	function createItems(){
+	createItems(){
 		/*
 		Description: 
 			This function creates the items that populate the field
@@ -107,7 +107,7 @@ module.exports = class GameBase {
 	}
 
 
-	function randomColor(){
+	randomColor(){
 		/*
 		Description:
 			This function selects a random color
@@ -120,7 +120,7 @@ module.exports = class GameBase {
 	}
 
 
-	function randomGeometry(){
+	randomGeometry(){
 		/*
 		This function selects a random geometrical object among a few predefined options
 		@return: Three.Geometry
@@ -141,7 +141,7 @@ module.exports = class GameBase {
 		}
 	}
 
-	function randomSize(){
+	randomSize(){
 		/*
 		This function selects a random size within a range
 		@return: Number
@@ -151,7 +151,7 @@ module.exports = class GameBase {
 		return myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
 	}
 
-    function detectCollision(j){
+    detectCollision(j){
 	/*
     Description: 
         This function detects the contact between the avatars and the items

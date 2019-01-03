@@ -39,7 +39,8 @@ light.position.set(1.5, 1, 1);
 scene.add(light);
 
 let username = null
-let playerid = null
+let playerID = null
+let gameRunning = false
 
 ////////////////////////////////////////////////////
 ////////  Global customizable parameters  //////////
@@ -70,13 +71,13 @@ camera.position.y = 100*scaleFactor;
 camera.position.z = 300*scaleFactor;
 
 socket.on('connect', () => {
-    console.log(socket.id)
+    console.log('socketid: ' + socket.id)
     startGame()
 });
 
 function usernameajax() {
     var settings = {
-        "async": false,
+        "async": true,
         "crossDomain": true,
         //"url": "http://192.168.178.20:8080/username",    // Home
         "url": "http://192.168.20.13:8080/username",   // Home2
@@ -88,37 +89,51 @@ function usernameajax() {
         "processData": false
     }
 
-    return $.ajax(settings)
+    return $.get(settings)
 
 }
 
 function getUserName() {
 
     console.log('function get username called')
-    let res = false;
 
     $.when(usernameajax()).then(function (response) {
         if (response.status == 200) {
             console.log("getting unsername was successfull")
             username = response.data
-            res = true
+            socket.emit('start play', {user: username}, function(responsedata) {
+                console.log("got socket message here")
+                if (responsedata.answer === false) {
+                    console.log("you can not enter the game")
+                    window.location.href = "menu.html"
+                } else {
+                    playerID = responsedata.id
+                    console.log("entered game " + playerID)
+                    gameRunning = true
+                    // initialise avatar arrays and so on
+                    createPlayingField();
+                    createFence();
+                    createAvatars();
+
+                }
+            } );
         } else {
             console.log('getting username was not successfull');
             alert("you are not logged in")
+            window.location.href = "menu.html"
         }
     })
 
-    return res
 }
 
 ////////////////////////////////////////////////////
 ////////////////  Initialisation  //////////////////
 ////////////////////////////////////////////////////
-playerIndex = getPlayerIndex();
+/*playerIndex = getPlayerIndex();
 createPlayingField();
 createFence();
 createAvatars();
-
+*/
 ////////////////////////////////////////////////////
 /////////////  Create Playing field  ///////////////
 ////////////////////////////////////////////////////
@@ -135,7 +150,7 @@ function createPlayingField(){
     geo.computeVertexNormals();
     const mat = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, shininess: 20});
     const txtLoader = new THREE.TextureLoader();
-    txtLoader.load("textures/woodenFloor.png",  function(txtMap) {
+    txtLoader.load('../images/woodenFloor.png',  function(txtMap) {
         txtMap.wrapS = THREE.RepeatWrapping;
         txtMap.wrapT = THREE.RepeatWrapping;
         txtMap.minFilter = THREE.NearestMipMapLinearFilter;
@@ -346,16 +361,18 @@ function moveJoints(){
 ///////////////  CLIENT GAME LOGIC    //////////////
 ////////////////////////////////////////////////////
 
+/*
 function getPlayerID(){
     /*
     Description:
         This function returns the player ID
     @return: number
         player ID
-    */
+    * /
     "use strict";
     return 0;//TODO, REPLACE WITH PLAYER ID ASSIGNED BY SERVER
 }
+*/
 
 function mycb(event){
     /*
@@ -371,8 +388,8 @@ function mycb(event){
     "use strict";
     const time = clock.getElapsedTime();
     const stepDistance = myAvatar.bodyWidth*1.8;
-    if(gameOver){
-        alert("GAME OVER!!!");
+    if(!gameRunning){
+        //alert("GAME OVER!!!");
         return;
     }
     if(Math.abs(time - lastMoved) < 0.15){//For the human eyes sampling
@@ -429,7 +446,7 @@ function updateAvatarPos(){
         void
     */
     "use strict";
-    for (let i=0;i<numPlayers;++i){
+    for (let i=0;i<numPlayers;++i){		// TODO only for those avatars who exist
         for (let j=0;i<3;++j){
             posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
         }
@@ -458,8 +475,9 @@ render();
 //communication server-client
 
 function startGame() {
-    ans = getUserName()
-
+    getUserName()
+    /*ans = getUserName()
+	console.log('anser received: ' + ans)
     if (ans) {
         console.log(username)
         socket.emit('start play', {user: username}, function(responsedata) {
@@ -468,12 +486,12 @@ function startGame() {
                 console.log("you can not enter the game")
                 window.location.href = "menu.html"
             } else {
-                playerid = responsedata.id
+                playerIndex = responsedata.id
                 console.log("entered game " + playerid)
                 // initialise avatar arrays and so on
-                for (let i=0;i<5;++i){
-                    avatars[i] = new THREE.Object3D();
-                }
+                createPlayingField();
+                createFence();
+                createAvatars();
 
             }
         } );
@@ -481,7 +499,7 @@ function startGame() {
         console.log('no username')
         window.location.href = "menu.html"
     }
-
+	*/
     socket.on('chat message', function (msg) {
         // add message to chat
         console.log("received chat message")
@@ -509,6 +527,8 @@ function startGame() {
     socket.on('game ends', function (msg) {
         // show scores
         console.log("received game end message")
+        gameRunning = false
+		alert('Game is over!')
     });
 
     // react on userinput
@@ -524,5 +544,5 @@ function startGame() {
 
 $("#btn_exit").click(function() {
     console.log("clicked exit")
-    socket.emit('player quits', {id: playerid, user: username})
+    socket.emit('player quits', {id: playerID, user: username})
 });
