@@ -26,10 +26,10 @@
             <div class="scoreboard">
                 SCOREBOARD
                 <div class="table">
-                    <div class="scoreentry">
-                        <p class="number">1.</p>
-                        <p class="username">Batman</p>
-                    </div>
+                    <ul class="scoreentry" id="scoreentry">
+                        <p class="username">TestUser1</p>
+                        <p class="score">0</p>
+                    </ul>
                 </div>
             </div>
             <div id="messageArea" class="row">
@@ -57,6 +57,7 @@
         var $messageForm = $('#messageForm');
         var $message = $('#message');
         var $chatentry = $('#chatentry');
+        var $scoreentry = $('#scoreentry');
 
         //Client presses "Send" button for sending the message
         $messageForm.submit(function (e) {
@@ -68,15 +69,35 @@
         /*
         //Send Message
         socket.on('send message', function (data) {
-        io.sockets.emit('new message', { msg: data, user: socket.username });
+            io.sockets.emit('new message', { msg: data, user: socket.username });
         });
         */
 
         //Receiving new message and displaying it
         socket.on('new message', function (data) {
-            $chatentry.append('<p class="username"><strong>' + data.user + '</strong>:</div>');
-            $chatentry.append('<p class="usermessage">' + data.msg + '</div>');
-        })
+            $chatentry.append('<p class="username"><strong>' + data.user + '</strong>:</p>');
+            $chatentry.append('<p class="usermessage">' + data.msg + '</p>');
+        });
+
+        //Receiving "update scoreboard" message from server
+        socket.on('update scoreboard', function (data) {
+            var html = '';
+            for (i = 1; i <= data.length; i++) {
+                html += '<p class="username">' + data[i].user + '</p>';
+                html += '<p class="score">' + data[i].msg + '</p>';
+            }
+            $scoreentry.html(html);
+        });
+        //SERVER SIDE CODE
+        /*
+        //Score has changed of current players
+        socket.on('score changed', function (score) {
+            //update list of current players and its scores
+            //update DB
+            //update scoreboard
+            io.sockets.emit('update scorboard', {listCurrentPlayers});
+        });
+        */
 
     </script>
 </body>

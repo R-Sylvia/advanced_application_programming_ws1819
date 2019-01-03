@@ -48,11 +48,11 @@ blockquote, q {
     quotes: none;
 }
 
-    blockquote:before, blockquote:after,
-    q:before, q:after {
-        content: '';
-        content: none;
-    }
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
 
 a {
     margin: 0;
@@ -123,6 +123,8 @@ input, select {
 html, body {
     height: 100%;
     width: 100%;
+    margin: 0;
+    overflow: hidden;
     background: rgb(237, 222, 241);
     /*background-size: cover;
     background-position: center;*/
@@ -131,7 +133,7 @@ html, body {
 
 .login-box {
     width: 320px;
-    height: 420px;
+    height: 490px;
     background: rgba(0,0,0,0.5);
     color: #fff;
     top: 50%;
