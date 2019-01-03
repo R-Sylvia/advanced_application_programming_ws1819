@@ -118,7 +118,6 @@ playerIndex = getPlayerIndex();
 createPlayingField();
 createFence();
 createAvatars();
-createItems();
 
 ////////////////////////////////////////////////////
 /////////////  Create Playing field  ///////////////
