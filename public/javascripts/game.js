@@ -530,6 +530,22 @@ function createClientItems(){
     }
 }
 
+
+function deleteItems(){
+    /*
+    Description:
+        This function deletes the items based on server answer (avatar contact)
+    @return:
+        void
+    */
+    "use strict";
+    if(/*TODO itemReceivedFromSocket*/){
+    	const indexItemToRemove = 0;//TODO: RECEIVED INDEX from server detectCollision()
+		scene.remove(itemsToGrab[indexItemToRemove]);
+		itemsToGrab.splice(indexItemToRemove,1);
+	}
+}
+
 ////////////////////////////////////////////////////
 ////////////////  Render function  /////////////////
 ////////////////////////////////////////////////////
@@ -542,6 +558,7 @@ function render() {
     else{
         lastUpdated= time;
         updateAvatarPos();
+        deleteItems();
     }
     requestAnimationFrame(render);
     controls.update();

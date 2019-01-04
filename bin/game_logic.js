@@ -210,9 +210,12 @@ module.exports = class GameBase {
                 dist = 0;
             }
             if(	distance2D <= dist){
-                //TODO tell client to remove item with code below...
-                //scene.remove(itemsToGrab[i]);
-                //itemsToGrab.splice(i,1);//update clients with this IF CHANGED (FLAG)
+                //TODO SEND CLIENT INDEX indexItemToRemove to function deleteItems() in game.js
+                this.server.array0.splice(indexItemToRemove,1);
+                this.server.array1.splice(indexItemToRemove,1);
+                this.server.array2.splice(indexItemToRemove,1);
+                this.server.array3.splice(indexItemToRemove,1);
+                this.server.array4.splice(indexItemToRemove,1);
                 ++this.scores[j];
             }
         }
