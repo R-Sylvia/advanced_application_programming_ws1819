@@ -62,6 +62,7 @@ const scores = new Array(numPlayers);   // array of scores received from server
 const itemsToGrab = new Array(100);
 const joints = new Array(numPlayers);
 let lastMoved = -1;
+let lastUpdated = -1;
 const myWorld = {
     edge1 : 		1000,
     edge2 : 		1000
@@ -455,7 +456,7 @@ document.addEventListener("keydown",mycb);
 function updateAvatarPos(){
     /*
     Description:
-        This function updates the avatars positions for the renderer
+        This function updates ALL the avatars positions for the renderer (server)
     @return:
         void
     */
@@ -481,10 +482,10 @@ function sendPos(){
     */
 	if (gameRunning) {
 		posi = new Array(3)
-		posi[0] = avatars[playerID].position.x
-		posi[1] = avatars[playerID].position.y
-		posi[2] = avatars[playerID].position.z
-		socket.emit('position update', {id: playerID, position: JSON.stringify(posi)})
+		posi[0] = avatars[playerID].position.x;
+		posi[1] = avatars[playerID].position.y;
+		posi[2] = avatars[playerID].position.z;
+		socket.emit('position update', {id: playerID, position: JSON.stringify(posi)});
     }
 }
 
@@ -493,7 +494,14 @@ function sendPos(){
 ////////////////////////////////////////////////////
 function render() {
     //called every 30or 60ms
-    //updateAvatarPos();
+    const time = clock.getElapsedTime();
+    if(Math.abs(time - lastUpdated) < 0.25){//eyes sampling
+        ;//do nothing
+    }
+    else{
+        lastUpdated= time;
+        updateAvatarPos();
+    }
     requestAnimationFrame(render);
     controls.update();
     renderer.render(scene, camera);
