@@ -9,71 +9,50 @@
     <style>
     </style>
     <link href="stylesheets/gameStyleSheet.css" rel="stylesheet" />
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./javascripts/three.min.js"></script>
+    <script src="./javascripts/TrackballControls.js"></script>
     <title>GrabIT Game page</title>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="space"></div>
-        <div class="titlegrid" style="min-height:30px">
-            <div class="title">Let's Play Grab <letterspace style="letter-spacing:10px">IT</letterspace></div>
-            <div class="registrationgrid">
-                <button class="button" type="button" id="btn_exit" onclick="window.location.href='menu.html'">Ex <letterspace style="letter-spacing:5px">IT</letterspace></button>
-
-            </div>
+<div class="wrapper">
+    <div class="space"></div>
+    <div class="titlegrid" style="min-height:30px">
+        <div class="title">Let's Play Grab <letterspace style="letter-spacing:10px">IT</letterspace></div>
+        <div class="registrationgrid">
+            <button class="button" type="button" onclick="window.location.href='menu.html'">Ex <letterspace style="letter-spacing:5px">IT</letterspace></button>
         </div>
-        <div class="game"></div>
+    </div>
+    <div class="game">
         <div class="scoreboard">
             SCOREBOARD
             <div class="table">
-                <div class="scoreentry">
-                    <p class="number">1.</p>
-                    <p class="username">Batman</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">2.</p>
-                    <p class="username">Superman</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">3.</p>
-                    <p class="username">Spiderman</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">4.</p>
-                    <p class="username">Hulk</p>
-                </div>
-                <div class="scoreentry">
-                    <p class="number">5.</p>
-                    <p class="username">Wonderwoman</p>
-                </div>
+                <ul class="scoreentry" id="scoreentry">
+                    <p class="username">TestUser1</p>
+                    <p class="score">0</p>
+                </ul>
             </div>
         </div>
-        <div class="chatbox">
-            <div class="chatlogs">
-                <div class="chat">
-                    <p class="username">Peter</p>
-                    <p class="usermessage">Hallo, wie geht es dir?!</p>
+        <div id="messageArea" class="row">
+            <div class="chatbox">
+                <div class="chatlogs">
+                    <div class="chatentry" id="chatentry"></div>
                 </div>
-                <div class="chat">
-                    <p class="username">Hans</p>
-                    <p class="usermessage">Hallo! Es geht mir gut!</p>
-                </div>
-                <div class="chat">
-                    <p class="username">Michel</p>
-                    <p class="usermessage">sdgsg dfghdfhgh dfghfghs erghh rh  sdgh dfgdfg sdfasdfgasdfga sdfg dfgsdfgsdfg sdfgdsfgfgh thrthrthr rtherrhrt rtggrs</p>
-                </div>
-                <div class="chat">
-                    <p class="username">Michel</p>
-                    <p class="usermessage">sdgsg dfghdfhgh dfghfghs erghh rh  sdgh dfgdfg sdfasdfgasdfga sdfg dfgsdfgsdfg sdfgdsfgfgh thrthrthr rtherrhrt rtggrs</p>
-                </div>
+                <form id="messageForm">
+                    <div class="chatform">
+                        <textarea class="form-control" id="message"></textarea>
+                        <input type="submit" class="SendBtn" value="Send"/>
+                    </div>
+                </form>
             </div>
-            <div class="chatform">
-                <textarea></textarea>
-                <button>Send</button>
-            </div>
+        </div>
+        <div class="canvas">
+            <canvas id="canvas" width="window.innerWidth" height="window.innerHeight - 87"></canvas>
+            <!--script src="javascripts/canvas.js"></script-->
         </div>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+</div>
     <script src="./javascripts/game.js"></script>
 </body>
 </html>
