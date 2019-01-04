@@ -507,14 +507,15 @@ function createClientItems(){
     //server.array3[i] stores y-coordinate
     //server.array4[i] stores z-coordinate
     for (let i=0;i<itemsToGrab.length;++i){
+        let geometry;
         if (server.array0[i] === 0){
-            let geometry = new THREE.SphereGeometry(server.array1[i], 10, 10);
+            geometry = new THREE.SphereGeometry(server.array1[i], 10, 10);
         }
         else if(server.array0[i] === 1){
-            let geometry = new THREE.CylinderGeometry(server.array1[i], server.array1[i], server.array1[i], 16);
+            geometry = new THREE.CylinderGeometry(server.array1[i], server.array1[i], server.array1[i], 16);
         }
         else{
-            let geometry = new THREE.BoxGeometry(server.array1[i], server.array1[i], server.array1[i]);
+            geometry = new THREE.BoxGeometry(server.array1[i], server.array1[i], server.array1[i]);
         }
         let randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
         let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
@@ -617,6 +618,7 @@ function startGame() {
         server.array2 = JSON.parse(msg.array2)
         server.array3 = JSON.parse(msg.array3)
         server.array4 = JSON.parse(msg.array4)
+        console.log(server.array0)
         createClientItems()
     });
 

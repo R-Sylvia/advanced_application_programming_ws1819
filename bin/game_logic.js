@@ -3,7 +3,7 @@
  * server side game logic
  */
 
-let three = require('../public/javascripts/three.min') // "include" three.min.js
+let THREE = require('../public/javascripts/three.min') // "include" three.min.js
 
 module.exports = class GameBase {
 
@@ -21,6 +21,17 @@ module.exports = class GameBase {
 						array2 : new Array(100),
 						array3 : new Array(100),
 						array4 : new Array(100) }
+
+        this.scaleFactor = 1/5;   //change size of all objects but keep proportions
+        this.myAvatar = {
+            height	   : 70*this.scaleFactor,
+            headRadius : 10*this.scaleFactor,
+            bodyWidth  : 15*this.scaleFactor
+        };
+        this.myWorld = {
+            edge1 : 1000,
+            edge2 : 1000
+        };
     }
 
     initialise() {
@@ -88,17 +99,7 @@ module.exports = class GameBase {
 	////////////////////////////////////////////////////
 	///////////////  SERVER GAME LOGIC    //////////////
 	////////////////////////////////////////////////////
-	const scaleFactor = 1/5;   //change size of all objects but keep proportions
-	const myAvatar = {
-    	height	   : 70*scaleFactor,
-    	headRadius : 10*scaleFactor,
-    	bodyWidth  : 15*scaleFactor
-	};
-	const myWorld = {
-    	edge1 : 1000,
-    	edge2 : 1000
-	};
-	
+
 	createItems(){
 		/*
 		Description: 
@@ -113,8 +114,8 @@ module.exports = class GameBase {
         //server.array3[i] stores y-coordinate
         //server.array4[i] stores z-coordinate
         for (let i=0;i<this.server.array0.length;++i){
-            let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
-            let geometry = randomGeometry();
+            let radius = this.myAvatar.headRadius*(1+2*Math.random()-0.5)+this.myAvatar.bodyWidth*3/2;
+            let geometry = this.randomGeometry();
             let offset = 0;
             if(geometry.type === "SphereGeometry"){
                 offset = geometry.parameters.radius;
@@ -132,10 +133,24 @@ module.exports = class GameBase {
                 this.server.array1[i] = offset*2;
             }
             this.server.array2[i] = offset+0.01;
-            this.server.array3[i] = myWorld.edge1  * 9/10 * (Math.random()-0.5);
-            this.server.array4[i] = myWorld.edge2  * 9/10 * (Math.random()-0.5);
+            this.server.array3[i] = this.myWorld.edge1  * 9/10 * (Math.random()-0.5);
+            this.server.array4[i] = this.myWorld.edge2  * 9/10 * (Math.random()-0.5);
         }
 	}
+
+
+	randomColor(){
+		/*
+		Description:
+			This function selects a random color
+		@return: THREE.Color
+			Random color
+		*/
+		"use strict";
+		const color = new THREE.Color(Math.random(), Math.random(), Math.random());
+		return color;
+	}
+
 
 	randomGeometry(){
 		/*
@@ -145,16 +160,27 @@ module.exports = class GameBase {
 		*/
 		"use strict";
 		const selectGeo = Math.random();
-		const size = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
 		if(selectGeo < 1/3){
-			return new THREE.SphereGeometry(size, 10, 10);
+			return new THREE.SphereGeometry(this.randomSize(), 10, 10);
 		}
 		else if(selectGeo < 2/3){
+			let size = this.randomSize();
 			return new THREE.CylinderGeometry(size, size, size, 16);
 		}
 		else{
+			let size = this.randomSize();
 			return new THREE.BoxGeometry(size, size, size);
 		}
+	}
+
+	randomSize(){
+		/*
+		This function selects a random size within a range
+		@return: Number
+			Number denoting random size
+		*/
+		"use strict";
+		return this.myAvatar.headRadius*(1+2*Math.random()-0.5)+this.myAvatar.bodyWidth*3/2;
 	}
 
     detectCollision(j){
@@ -167,28 +193,28 @@ module.exports = class GameBase {
         void
     */
     "use strict";
-    for (let i=0;i<this.server.array0.length;++i){
-    	let dist;
-    	let distance2D = Math.sqrt(Math.pow(avatars[j].position.x-this.server.array2[i],2)+
-			Math.pow(avatars[j].position.z-this.server.array4[i],2));
-    	if(this.server.array0[i] === 0){
-			dist = this.server.array1[i];
-		}
-		else if(this.server.array0[i] === 1){
-			dist = this.server.array1[i]*1.2;
-		}
-		else if(this.server.array0[i] === 2){
-			dist = this.server.array1[i];
-		}
-		else{
-			dist = 0;
-		}
-		if(	distance2D <= dist){
-			//TODO tell client to remove item with code below...
-			//scene.remove(itemsToGrab[i]);
-			//itemsToGrab.splice(i,1);//update clients with this IF CHANGED (FLAG)
-			++scores[j];
-		}
-	}
+        for (let i=0;i<this.server.array0.length;++i){
+            let dist;
+            let distance2D = Math.sqrt(Math.pow(this.avatars[j].position.x-this.server.array2[i],2)+
+                Math.pow(this.avatars[j].position.z-this.server.array4[i],2));
+            if(this.server.array0[i] === 0){
+                dist = this.server.array1[i];
+            }
+            else if(this.server.array0[i] === 1){
+                dist = this.server.array1[i]*1.2;
+            }
+            else if(this.server.array0[i] === 2){
+                dist = this.server.array1[i];
+            }
+            else{
+                dist = 0;
+            }
+            if(	distance2D <= dist){
+                //TODO tell client to remove item with code below...
+                //scene.remove(itemsToGrab[i]);
+                //itemsToGrab.splice(i,1);//update clients with this IF CHANGED (FLAG)
+                ++this.scores[j];
+            }
+        }
 	}
 }
