@@ -57,7 +57,12 @@ const posAvatar = new Array(numPlayers);
 for (let i=0;i<numPlayers;++i){
     avatars[i] = new THREE.Object3D();
     posAvatar[i] = new Array(3); //3 dimensions x, y, z
+    for (let j=0;j<3;++j){
+		posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
+	}   
+	avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
 }
+console.log('avatar positions initialised');
 const scores = new Array(numPlayers);   // array of scores received from server
 const itemsToGrab = new Array(100);
 const joints = new Array(numPlayers);
@@ -115,17 +120,6 @@ function getUserName() {
                     createPlayingField();
                     createFence();
                     createAvatars();
-
-                    // just to try
-
-                    for (let i=0;i<numPlayers;++i){		// TODO only for those avatars who exist
-                        for (let j=0;j<3;++j){
-                            posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
-                        }
-                        avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
-                    }
-                    console.log('avatar positions initialised')
-
                 }
             } );
         } else {
