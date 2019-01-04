@@ -96,15 +96,21 @@ wsServer.on('connection', function(socket){
             // broadcast a message to all current players
             chat.broadcastToRoom('chat message', msg.user + ' i entered the game')
             // broadcast avatar array
-            chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
-                                                        second: JSON.stringify(game.getPlayers()[1]),
-                                                        third: JSON.stringify(game.getPlayers()[2]),
-                                                        fourth: JSON.stringify(game.getPlayers()[3]),
-                                                        fifth: JSON.stringify(game.getPlayers()[4])})
+            players = game.getPlayers()
+            chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
+                                                        second: JSON.stringify(players[1]),
+                                                        third: JSON.stringify(players[2]),
+                                                        fourth: JSON.stringify(players[3]),
+                                                        fifth: JSON.stringify(players[4])})
             // broadcast item array
-            chat.broadcastToRoom('item positions', {items: game.getItems()})
+            items = game.getItems()
+            chat.broadcastToRoom('item positions', {array0: JSON.stringify(items.array0),
+                                                    array1: JSON.stringify(items.array1),
+                                                    array2: JSON.stringify(items.array2),
+                                                    array3: JSON.stringify(items.array3),
+                                                    array4: JSON.stringify(items.array4)})
             // broadcast scores
-            chat.broadcastToRoom('item positions', {scores: game.getScores()})
+            chat.broadcastToRoom('current scores', {scores: JSON.stringify(game.getScores())})
         }
     })
 
@@ -112,11 +118,12 @@ wsServer.on('connection', function(socket){
         // trigger collisiotn detection
         // new item array sent if new
         game.updatePlayerPosition(msg.id, JSON.parse(msg.position))
-        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
-                                                    second: JSON.stringify(game.getPlayers()[1]),
-                                                    third: JSON.stringify(game.getPlayers()[2]),
-                                                    fourth: JSON.stringify(game.getPlayers()[3]),
-                                                    fifth: JSON.stringify(game.getPlayers()[4])})
+        players = game.getPlayers()
+        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
+                                                    second: JSON.stringify(players[1]),
+                                                    third: JSON.stringify(players[2]),
+                                                    fourth: JSON.stringify(players[3]),
+                                                    fifth: JSON.stringify(players[4])})
     })
 
     socket.on('player quits', function(msg){
@@ -125,13 +132,18 @@ wsServer.on('connection', function(socket){
         // remove socket from room
         socket.leave(chat.getRoomName());
         // update avatar list for other players
-        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
-                                                    second: JSON.stringify(game.getPlayers()[1]),
-                                                    third: JSON.stringify(game.getPlayers()[2]),
-                                                    fourth: JSON.stringify(game.getPlayers()[3]),
-                                                    fifth: JSON.stringify(game.getPlayers()[4])})
+        players = game.getPlayers()
+        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
+                                                    second: JSON.stringify(players[1]),
+                                                    third: JSON.stringify(players[2]),
+                                                    fourth: JSON.stringify(players[3]),
+                                                    fifth: JSON.stringify(players[4])})
         // tell other players about leaving
         chat.broadcastToRoom('chat message', msg.user + ': i left the game')
+    })
+
+    socket.on('load main scoreboard', function(msg){
+
     })
 
     socket.on('login', function(msg){
@@ -205,4 +217,19 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+/**
+ * Saves the given Score to the database if no score entry for the player is there.
+ * If the player already has a score saved, it updates the score if this one is higher than the old.
+ */
+function MaybeSaveScore(playername, score){
+
+}
+
+/**
+ * Returns a sorted list of all stored playerscores, best first.
+ */
+function getScoreList(){
+
 }

@@ -4,9 +4,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.height -= 87;
 
-
-console.log('message js active');
-
 var c = canvas.getContext('2d');
 
 var mouse = {
@@ -119,4 +116,32 @@ function animate(){
         circleArray[i].update();
     }
 }
-animate();
+
+/* ****************************** */
+/* * initialize the canvas page * */
+/* ****************************** */
+function initialize() {
+    // Register an event listener to
+    // call the resizeCanvas() function each time
+    // the window is resized.
+    window.addEventListener('resize', resizeCanvas, false);
+    // Draw canvas border for the first time.
+    resizeCanvas();
+}
+
+/* ****************************** */
+/* **  resize the canvas       ** */
+/* ****************************** */
+// Runs each time the DOM window resize event fires.
+// Resets the canvas dimensions to match window,
+// then draws the new borders accordingly.
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.height -= 87;
+    animate();
+}
+initialize();
+//animate();
+
+//document.body.style.background = "url (" + canvas.toDataURL() + ")";

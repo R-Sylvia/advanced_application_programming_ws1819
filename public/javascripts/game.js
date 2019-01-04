@@ -62,6 +62,13 @@ for (let i=0;i<numPlayers;++i){
     }
     avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
 }
+
+let server = {  array0 : new Array(100),
+                array1 : new Array(100),
+                array2 : new Array(100),
+                array3 : new Array(100),
+                array4 : new Array(100) }
+
 console.log('avatar positions initialised');
 const scores = new Array(numPlayers);   // array of scores received from server
 const itemsToGrab = new Array(100);
@@ -493,33 +500,33 @@ function createClientItems(){
     @return:
         void
     */
-	"use strict";
-	//server.array0[i] stores geometry type
-	//server.array1[i] stores radius of item
-	//server.array2[i] stores x-coordinate
-	//server.array3[i] stores y-coordinate
-	//server.array4[i] stores z-coordinate
-	for (let i=0;i<itemsToGrab.length;++i){
-		if (server.array0[i] === 0){
-			let geometry = new THREE.SphereGeometry(server.array1[i], 10, 10);
-		}
-		else if(server.array0[i] === 1){
-			let geometry = new THREE.CylinderGeometry(server.array1[i], server.array1[i], server.array1[i], 16);
-		}
-		else{
-			let geometry = new THREE.BoxGeometry(server.array1[i], server.array1[i], server.array1[i]);
-		}
-		let randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-		let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
-		let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
-												shininess: 50, 
-												color:randomColor});
-		itemsToGrab[i] = new THREE.Mesh(geometry, material);
-		itemsToGrab[i].position.y = server.array2[i];
-		itemsToGrab[i].position.x = server.array3[i];
-		itemsToGrab[i].position.z = server.array4[i];
-		scene.add(itemsToGrab[i]);
-	}	
+    "use strict";
+    //server.array0[i] stores geometry type
+    //server.array1[i] stores radius of item
+    //server.array2[i] stores x-coordinate
+    //server.array3[i] stores y-coordinate
+    //server.array4[i] stores z-coordinate
+    for (let i=0;i<itemsToGrab.length;++i){
+        if (server.array0[i] === 0){
+            let geometry = new THREE.SphereGeometry(server.array1[i], 10, 10);
+        }
+        else if(server.array0[i] === 1){
+            let geometry = new THREE.CylinderGeometry(server.array1[i], server.array1[i], server.array1[i], 16);
+        }
+        else{
+            let geometry = new THREE.BoxGeometry(server.array1[i], server.array1[i], server.array1[i]);
+        }
+        let randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+        let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+        let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
+            shininess: 50,
+            color:randomColor});
+        itemsToGrab[i] = new THREE.Mesh(geometry, material);
+        itemsToGrab[i].position.y = server.array2[i];
+        itemsToGrab[i].position.x = server.array3[i];
+        itemsToGrab[i].position.z = server.array4[i];
+        scene.add(itemsToGrab[i]);
+    }
 }
 
 ////////////////////////////////////////////////////
@@ -605,6 +612,12 @@ function startGame() {
         // reset item array
         // itemsToGrab = msg.items;
         console.log("received item message")
+        server.array0 = JSON.parse(msg.array0)
+        server.array1 = JSON.parse(msg.array1)
+        server.array2 = JSON.parse(msg.array2)
+        server.array3 = JSON.parse(msg.array3)
+        server.array4 = JSON.parse(msg.array4)
+        createClientItems()
     });
 
     socket.on('current scores', function (msg) {

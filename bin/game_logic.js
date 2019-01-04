@@ -15,7 +15,12 @@ module.exports = class GameBase {
         // array to store scores
         this.scores = new Array(this.maxPlayers)
         // array to store objects to grab
-        this.itemsToGrab = new Array(100)
+        //this.itemsToGrab = new Array(100)
+        this.server = {	array0 : new Array(100),
+						array1 : new Array(100),
+						array2 : new Array(100),
+						array3 : new Array(100),
+						array4 : new Array(100) }
     }
 
     initialise() {
@@ -29,7 +34,7 @@ module.exports = class GameBase {
 		}
 
         // initialise array itemsToGrab
-
+        this.createItems()
     }
 
     addPlayer() {
@@ -76,7 +81,7 @@ module.exports = class GameBase {
     }
 
     getItems() {
-        return this.itemsToGrab;
+        return this.server;
     }
 
 
@@ -92,42 +97,42 @@ module.exports = class GameBase {
 			void
 		*/
 		"use strict";
-		//server.array0[i] stores geometry type
-		//server.array1[i] stores radius of item
-		//server.array2[i] stores x-coordinate
-		//server.array3[i] stores y-coordinate
-		//server.array4[i] stores z-coordinate
-		for (let i=0;i<itemsToGrab.length;++i){
-			let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
-			let geometry = randomGeometry();
-			let offset = 0;
-			let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
-													shininess: 50, 
-													color:randomColor()});
-			itemsToGrab[i] = new THREE.Mesh(geometry, material);
-			if(geometry.type === "SphereGeometry"){
-				offset = geometry.parameters.radius;
-				server.array0[i] = 0;
-				server.array1[i] = offset;
-			}
-			if(geometry.type === "BoxGeometry"){
-				offset = geometry.parameters.height/2;
-				server.array0[i] = 1;
-				server.array1[i] = offset*2;
-			}
-			if(geometry.type === "CylinderGeometry"){
-				offset = geometry.parameters.height/2;
-				server.array0[i] = 2;
-				server.array1[i] = offset*2;
-			}
-			itemsToGrab[i].position.y = offset+0.01;
-			itemsToGrab[i].position.x = myWorld.edge1  * 9/10 * (Math.random()-0.5);
-			itemsToGrab[i].position.z = myWorld.edge2  * 9/10 * (Math.random()-0.5);
-			server.array2[i] = itemsToGrab[i].position.y;
-			server.array3[i] = itemsToGrab[i].position.x;
-			server.array4[i] = itemsToGrab[i].position.z;
-			scene.add(itemsToGrab[i]);
-		}
+        //server.array0[i] stores geometry type
+        //server.array1[i] stores radius of item
+        //server.array2[i] stores x-coordinate
+        //server.array3[i] stores y-coordinate
+        //server.array4[i] stores z-coordinate
+        for (let i=0;i<this.server.array0.length;++i){
+            let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+            let geometry = randomGeometry();
+            let offset = 0;
+            let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
+                shininess: 50,
+                color:randomColor()});
+            itemsToGrab[i] = new THREE.Mesh(geometry, material);
+            if(geometry.type === "SphereGeometry"){
+                offset = geometry.parameters.radius;
+                this.server.array0[i] = 0;
+                this.server.array1[i] = offset;
+            }
+            if(geometry.type === "BoxGeometry"){
+                offset = geometry.parameters.height/2;
+                this.server.array0[i] = 1;
+                this.server.array1[i] = offset*2;
+            }
+            if(geometry.type === "CylinderGeometry"){
+                offset = geometry.parameters.height/2;
+                this.server.array0[i] = 2;
+                this.server.array1[i] = offset*2;
+            }
+            itemsToGrab[i].position.y = offset+0.01;					// TODO is itemstograb still needed??
+            itemsToGrab[i].position.x = myWorld.edge1  * 9/10 * (Math.random()-0.5);
+            itemsToGrab[i].position.z = myWorld.edge2  * 9/10 * (Math.random()-0.5);
+            this.server.array2[i] = itemsToGrab[i].position.y;
+            this.server.array3[i] = itemsToGrab[i].position.x;
+            this.server.array4[i] = itemsToGrab[i].position.z;
+            scene.add(itemsToGrab[i]);
+        }
 	}
 
 
