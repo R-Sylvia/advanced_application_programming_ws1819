@@ -486,6 +486,42 @@ function sendPos(){
     }
 }
 
+function createClientItems(){
+    /*
+    Description:
+        This function creates the items based on server answer
+    @return:
+        void
+    */
+	"use strict";
+	//server.array0[i] stores geometry type
+	//server.array1[i] stores radius of item
+	//server.array2[i] stores x-coordinate
+	//server.array3[i] stores y-coordinate
+	//server.array4[i] stores z-coordinate
+	for (let i=0;i<itemsToGrab.length;++i){
+		if (server.array0[i] === 0){
+			let geometry = new THREE.SphereGeometry(server.array1[i], 10, 10);
+		}
+		else if(server.array0[i] === 1){
+			let geometry = new THREE.CylinderGeometry(server.array1[i], server.array1[i], server.array1[i], 16);
+		}
+		else{
+			let geometry = new THREE.BoxGeometry(server.array1[i], server.array1[i], server.array1[i]);
+		}
+		let randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+		let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+		let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
+												shininess: 50, 
+												color:randomColor});
+		itemsToGrab[i] = new THREE.Mesh(geometry, material);
+		itemsToGrab[i].position.y = server.array2[i];
+		itemsToGrab[i].position.x = server.array3[i];
+		itemsToGrab[i].position.z = server.array4[i];
+		scene.add(itemsToGrab[i]);
+	}	
+}
+
 ////////////////////////////////////////////////////
 ////////////////  Render function  /////////////////
 ////////////////////////////////////////////////////
