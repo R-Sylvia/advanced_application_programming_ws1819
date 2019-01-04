@@ -94,6 +94,10 @@ module.exports = class GameBase {
     	headRadius : 10*scaleFactor,
     	bodyWidth  : 15*scaleFactor
 	};
+	const myWorld = {
+    	edge1 : 1000,
+    	edge2 : 1000
+	};
 	
 	createItems(){
 		/*
@@ -141,27 +145,16 @@ module.exports = class GameBase {
 		*/
 		"use strict";
 		const selectGeo = Math.random();
+		const size = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
 		if(selectGeo < 1/3){
-			return new THREE.SphereGeometry(randomSize(), 10, 10);
+			return new THREE.SphereGeometry(size, 10, 10);
 		}
 		else if(selectGeo < 2/3){
-			let size = randomSize();
 			return new THREE.CylinderGeometry(size, size, size, 16);
 		}
 		else{
-			let size = randomSize();
 			return new THREE.BoxGeometry(size, size, size);
 		}
-	}
-
-	randomSize(){
-		/*
-		This function selects a random size within a range
-		@return: Number
-			Number denoting random size
-		*/
-		"use strict";
-		return myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
 	}
 
     detectCollision(j){
