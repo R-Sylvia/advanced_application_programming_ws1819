@@ -88,7 +88,13 @@ module.exports = class GameBase {
 	////////////////////////////////////////////////////
 	///////////////  SERVER GAME LOGIC    //////////////
 	////////////////////////////////////////////////////
-
+	const scaleFactor = 1/5;   //change size of all objects but keep proportions
+	const myAvatar = {
+    	height	   : 70*scaleFactor,
+    	headRadius : 10*scaleFactor,
+    	bodyWidth  : 15*scaleFactor
+	};
+	
 	createItems(){
 		/*
 		Description: 
@@ -106,10 +112,6 @@ module.exports = class GameBase {
             let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
             let geometry = randomGeometry();
             let offset = 0;
-            let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
-                shininess: 50,
-                color:randomColor()});
-            itemsToGrab[i] = new THREE.Mesh(geometry, material);
             if(geometry.type === "SphereGeometry"){
                 offset = geometry.parameters.radius;
                 this.server.array0[i] = 0;
@@ -125,29 +127,11 @@ module.exports = class GameBase {
                 this.server.array0[i] = 2;
                 this.server.array1[i] = offset*2;
             }
-            itemsToGrab[i].position.y = offset+0.01;					// TODO is itemstograb still needed??
-            itemsToGrab[i].position.x = myWorld.edge1  * 9/10 * (Math.random()-0.5);
-            itemsToGrab[i].position.z = myWorld.edge2  * 9/10 * (Math.random()-0.5);
-            this.server.array2[i] = itemsToGrab[i].position.y;
-            this.server.array3[i] = itemsToGrab[i].position.x;
-            this.server.array4[i] = itemsToGrab[i].position.z;
-            scene.add(itemsToGrab[i]);
+            this.server.array2[i] = offset+0.01;
+            this.server.array3[i] = myWorld.edge1  * 9/10 * (Math.random()-0.5);
+            this.server.array4[i] = myWorld.edge2  * 9/10 * (Math.random()-0.5);
         }
 	}
-
-
-	randomColor(){
-		/*
-		Description:
-			This function selects a random color
-		@return: THREE.Color
-			Random color
-		*/
-		"use strict";
-		const color = new THREE.Color(Math.random(), Math.random(), Math.random());
-		return color;
-	}
-
 
 	randomGeometry(){
 		/*
