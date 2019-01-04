@@ -48,11 +48,11 @@ blockquote, q {
     quotes: none;
 }
 
-    blockquote:before, blockquote:after,
-    q:before, q:after {
-        content: '';
-        content: none;
-    }
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
 
 a {
     margin: 0;
@@ -111,7 +111,7 @@ input, select {
 /* **************************************** */
 
 /* **************************************** */
-/* ------------ MOBILE VERSION ------------ */
+/* ------------ DESKTOP VERSION ----------- */
 /* **************************************** */
 a:hover {
     color: mediumslateblue;
@@ -184,31 +184,33 @@ body, html {
     position:relative;
 }
 
-.text {
+.insideContent {
+    width: 90%;
+    height: 420px;
+    top: 8%;
+    left: 5%;
+    box-sizing: border-box;
+    position: absolute;
+}
+
+.text, .member {
     font-size: 16px;
     min-height: 22px;
-    position: absolute;
-
-    grid-row: 2/2;
+    position: relative;
+    padding: 10px 0 5px 0;
+    text-decoration: none;
 }
 
-.helpgrid {
-    grid-area: helpgrid;
-    position: absolute;
-    display: grid;
-    grid-template-rows: 10% 90%;
-    grid-gap: 10px;
-    top: 10%;
-    bottom: 10%;
-    right: 5%;
-    left: 5%;
+.membertext{
+    text-align:start;
+    position:absolute;
+    left:110px;
+    top: 13px;
 }
+
 .headline {
     font-size: 20px;
-    vertical-align:middle;
-    position: absolute;
-    text-decoration:underline;
-
+    text-decoration: underline;
 }
 
 .footergrid {
@@ -233,6 +235,14 @@ body, html {
     color: black;
 }
 
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+   /*
+    top: -50px;
+    left: calc(50% - 50px);*/
+}
 /* **************************************** */
-/* --------- END OF MOBILE VERSION -------- */
+/* -------- END OF DESKTOP VERSION -------- */
 /* **************************************** */

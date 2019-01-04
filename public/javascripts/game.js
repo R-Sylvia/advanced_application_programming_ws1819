@@ -456,12 +456,14 @@ document.addEventListener("keydown",mycb);
 function updateAvatarPos(){
     /*
     Description:
-        This function updates ALL the avatars positions for the renderer (server)
+        This function updates the avatars positions for the renderer
     @return:
         void
     */
     "use strict";
+
     // try:
+
     for (let i=0;i<numPlayers;++i){		// TODO only for those avatars who exist
         /*for (let j=0;i<3;++j){
             posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
@@ -474,18 +476,18 @@ function updateAvatarPos(){
 }
 
 function sendPos(){
-	/*
+    /*
     Description:
         This function informs the server of the avatar (playerID) new position
     @return:
         void
     */
-	if (gameRunning) {
-		posi = new Array(3)
-		posi[0] = avatars[playerID].position.x;
-		posi[1] = avatars[playerID].position.y;
-		posi[2] = avatars[playerID].position.z;
-		socket.emit('position update', {id: playerID, position: JSON.stringify(posi)});
+    if (gameRunning) {
+        posi = new Array(3)
+        posi[0] = avatars[playerID].position.x;
+        posi[1] = avatars[playerID].position.y;
+        posi[2] = avatars[playerID].position.z;
+        socket.emit('position update', {id: playerID, position: JSON.stringify(posi)});
     }
 }
 
@@ -562,7 +564,7 @@ function startGame() {
             posAvatar[3] = posis
             posis = JSON.parse(msg.fifth)
             posAvatar[4] = posis
-            updateAvatarPos()
+            //updateAvatarPos()
         }
 
     });
