@@ -174,25 +174,26 @@ module.exports = class GameBase {
         void
     */
     "use strict";
-    for (let i=0;i<itemsToGrab.length;++i){
+    for (let i=0;i<this.server.array0.length;++i){
     	let dist;
-    	let distance2D = Math.sqrt(Math.pow(avatars[j].position.x-itemsToGrab[i].position.x,2)+
-			Math.pow(avatars[j].position.z-itemsToGrab[i].position.z,2));
-    	if(itemsToGrab[i].geometry.type === "SphereGeometry"){
-			dist = itemsToGrab[i].geometry.parameters.radius;
+    	let distance2D = Math.sqrt(Math.pow(avatars[j].position.x-this.server.array2[i],2)+
+			Math.pow(avatars[j].position.z-this.server.array4[i],2));
+    	if(this.server.array0[i] === 0){
+			dist = this.server.array1[i];
 		}
-		else if(itemsToGrab[i].geometry.type === "BoxGeometry"){
-			dist = itemsToGrab[i].geometry.parameters.width*1.2;
+		else if(this.server.array0[i] === 1){
+			dist = this.server.array1[i]*1.2;
 		}
-		else if(itemsToGrab[i].geometry.type === "CylinderGeometry"){
-			dist = itemsToGrab[i].geometry.parameters.radiusTop;
+		else if(this.server.array0[i] === 2){
+			dist = this.server.array1[i];
 		}
 		else{
 			dist = 0;
 		}
 		if(	distance2D <= dist){
-			scene.remove(itemsToGrab[i]);
-			itemsToGrab.splice(i,1);//update clients with this IF CHANGED (FLAG)
+			//TODO tell client to remove item with code below...
+			//scene.remove(itemsToGrab[i]);
+			//itemsToGrab.splice(i,1);//update clients with this IF CHANGED (FLAG)
 			++scores[j];
 		}
 	}
