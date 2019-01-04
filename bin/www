@@ -118,12 +118,17 @@ wsServer.on('connection', function(socket){
         // trigger collisiotn detection
         // new item array sent if new
         game.updatePlayerPosition(msg.id, JSON.parse(msg.position))
+        console.log(JSON.parse((msg.position)))
         players = game.getPlayers()
         chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
                                                     second: JSON.stringify(players[1]),
                                                     third: JSON.stringify(players[2]),
                                                     fourth: JSON.stringify(players[3]),
                                                     fifth: JSON.stringify(players[4])})
+        items = game.detectCollision(msg.id)
+        if (items.length > 0) {
+            chat.broadcastToRoom('delete items', {items: JSON.stringify(items)})
+        }
     })
 
     socket.on('player quits', function(msg){

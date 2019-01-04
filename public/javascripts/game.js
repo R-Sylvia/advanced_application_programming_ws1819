@@ -56,11 +56,11 @@ const avatars = new Array(numPlayers);
 const posAvatar = new Array(numPlayers);
 for (let i=0;i<numPlayers;++i){
     avatars[i] = new THREE.Object3D();
-    posAvatar[i] = new Array(3); //3 dimensions x, y, z
-    for (let j=0;j<3;++j){
-        posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
+    posAvatar[i] = new Array(2); //2 dimensions x and z
+    for (let j=0;j<2;++j){
+        posAvatar[i][j] = 0; // initialise to middle of field
     }
-    avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
+    avatars[i].position.set(posAvatar[i][0], myAvatar.height/2, posAvatar[i][1]);
 }
 
 let server = {  array0 : new Array(100),
@@ -470,8 +470,8 @@ function updateAvatarPos(){
         /*for (let j=0;i<3;++j){
             posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
         }*/
-        if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null) && (posAvatar[i][2] !== null)) {
-            avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
+        if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null)) {
+            avatars[i].position.set(posAvatar[i][0], myAvatar.height/2, posAvatar[i][1]);
             console.log('updated player: ' + i)
         }
     }
@@ -485,10 +485,9 @@ function sendPos(){
         void
     */
     if (gameRunning) {
-        posi = new Array(3)
+        posi = new Array(2)
         posi[0] = avatars[playerID].position.x;
-        posi[1] = avatars[playerID].position.y;
-        posi[2] = avatars[playerID].position.z;
+        posi[1] = avatars[playerID].position.z;
         socket.emit('position update', {id: playerID, position: JSON.stringify(posi)});
     }
 }
@@ -530,8 +529,7 @@ function createClientItems(){
     }
 }
 
-
-function deleteItems(){
+function deleteItems(items){
     /*
     Description:
         This function deletes the items based on server answer (avatar contact)
@@ -539,11 +537,11 @@ function deleteItems(){
         void
     */
     "use strict";
-    if(/*TODO itemReceivedFromSocket*/){
-    	const indexItemToRemove = 0;//TODO: RECEIVED INDEX from server detectCollision()
-		scene.remove(itemsToGrab[indexItemToRemove]);
-		itemsToGrab.splice(indexItemToRemove,1);
-	}
+    for (let i = 0; i < items.length; i++) {
+        const indexItemToRemove = items[i]
+        scene.remove(itemsToGrab[indexItemToRemove]);
+        itemsToGrab.splice(indexItemToRemove,1);
+    }
 }
 
 ////////////////////////////////////////////////////
@@ -558,7 +556,6 @@ function render() {
     else{
         lastUpdated= time;
         updateAvatarPos();
-        deleteItems();
     }
     requestAnimationFrame(render);
     controls.update();
@@ -652,9 +649,12 @@ function startGame() {
 		alert('Game is over!')
     });
 
-    // react on userinput
-
-    // rendering function call here
+    socket.on('delete items', function(msg){
+        console.log("received delete items message")
+        items = JSON.parse(msg.items)
+        console.log(items)
+        deleteItems(items)
+    })
 }
 
 

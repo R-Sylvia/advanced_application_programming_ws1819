@@ -38,10 +38,9 @@ module.exports = class GameBase {
         // current player count
         this.numPlayers = 0;
         for(let i = 0; i < this.maxPlayers; i++) {
-        	this.avatars[i] = new Array(3)
+        	this.avatars[i] = new Array(2)
 			this.avatars[i][0] = null
 			this.avatars[i][1] = null
-			this.avatars[i][2] = null
 		}
 
         // initialise array itemsToGrab
@@ -52,10 +51,8 @@ module.exports = class GameBase {
         if (this.numPlayers < this.maxPlayers) {
             // add player
             this.numPlayers += 1
-			//this.avatars[this.numPlayers - 1] = new Array(3)
             this.avatars[this.numPlayers - 1][0] = 0
 			this.avatars[this.numPlayers - 1][1] = 0
-            this.avatars[this.numPlayers - 1][2] = 0// = this.numPlayers //placeholder for: new THREE.Object3D(); start position 0,0,0
             this.scores[this.numPlayers - 1] = 0
             return this.numPlayers - 1  // new player's id
         } else {
@@ -193,10 +190,13 @@ module.exports = class GameBase {
         void
     */
     "use strict";
+    console.log('detection collision called')
+    	let deleted = []	// array to store indexes to be removed
+		let indexcounter = 0
         for (let i=0;i<this.server.array0.length;++i){
             let dist;
-            let distance2D = Math.sqrt(Math.pow(this.avatars[j].position.x-this.server.array2[i],2)+
-                Math.pow(this.avatars[j].position.z-this.server.array4[i],2));
+            let distance2D = Math.sqrt(Math.pow(this.avatars[j][0]-this.server.array2[i],2)+
+                Math.pow(this.avatars[j][1]-this.server.array4[i],2));
             if(this.server.array0[i] === 0){
                 dist = this.server.array1[i];
             }
@@ -210,7 +210,10 @@ module.exports = class GameBase {
                 dist = 0;
             }
             if(	distance2D <= dist){
-                //TODO SEND CLIENT INDEX indexItemToRemove to function deleteItems() in game.js
+                let indexItemToRemove = i		// TODO indexItemToRemove was not declared below. correct with i ???
+				deleted[indexcounter] = indexItemToRemove;
+				indexcounter++
+				console.log('deleted item: ' + indexItemToRemove)
                 this.server.array0.splice(indexItemToRemove,1);
                 this.server.array1.splice(indexItemToRemove,1);
                 this.server.array2.splice(indexItemToRemove,1);
@@ -219,5 +222,6 @@ module.exports = class GameBase {
                 ++this.scores[j];
             }
         }
+        return deleted;
 	}
 }
