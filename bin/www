@@ -1,0 +1,193 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+let app = require('../app');
+let debug = require('debug')('grabIT:server');
+let http = require('http');
+//let WebSocketServer = require('websocket').server;
+
+
+let chatclass = require('./chat_class');
+let gameclass = require('./game_logic');
+let game = new gameclass(5);
+let currentPlayerCount = 0;
+/**
+ * Get port from environment and store in Express.
+ */
+
+let port = normalizePort(process.env.PORT || '8080');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+let server = http.createServer(app);
+/*let wsServer = new WebSocketServer({
+    httpServer: server
+});*/
+let wsServer = require('socket.io')(server);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+let chat = new chatclass(wsServer);
+
+
+
+server.listen(port);
+//server.on('error', onError);
+//server.on('listening', onListening);
+
+// WebSocket server
+/*
+wsServer.on('request', function(request) {
+    let connection = request.accept(null, request.origin);
+
+    console.log('function on called');
+
+    // This is the most important callback for us, we'll handle
+    // all messages from users here.
+    connection.on('message', function(message) {
+        console.log(message);
+        if (message.type === 'utf8') {
+            // process WebSocket message
+        }
+    });
+
+    connection.on('close', function(connection) {
+        // close user connection
+    });
+});
+*/
+
+
+wsServer.on('connection', function(socket){
+    console.log('a user connected');
+    console.log('client id:' + socket.id);
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
+    socket.on('chat message', function(msg){
+        console.log('message: ' + msg);
+        chat.broadcastMessage('chat message', msg);
+    });
+
+    // a new player wants to jon the game
+    socket.on('start play', function(msg, callbackfn) {
+        if (currentPlayerCount === 0) {
+            game.initialise()
+        }
+        // try add player
+        let ans = game.addPlayer(msg);
+        if (ans === false) {
+            console.log("can not add player")
+            callbackfn({answer: false})
+        } else {
+            console.log("added new player")
+            socket.join(chat.getRoomName())
+            currentPlayerCount += 1;
+            // answer the player with his id
+            callbackfn({answer: true, id: ans})
+
+            // broadcast a message to all current players
+            chat.broadcastToRoom('chat message', msg.user + ' i entered the game')
+            // broadcast avatar array
+            chat.broadcastToRoom('avatar positions', {avatars: game.getPlayers()})
+            // broadcast item array
+            chat.broadcastToRoom('item positions', {items: game.getItems()})
+            // broadcast scores
+            chat.broadcastToRoom('item positions', {scores: game.getScores()})
+        }
+    })
+
+    socket.on('position update', function(msg){
+        // send answer
+    })
+
+    socket.on('player quits', function(msg){
+        // remove the player from game by id
+        game.removePlayer(msg.id);
+        // remove socket from room
+        socket.leave(chat.getRoomName());
+        // update avatar list for other players
+        chat.broadcastToRoom('avatar positions', {avatars: game.getPlayers()})
+        // tell other players about leaving
+        chat.broadcastToRoom('chat message', msg.user + ': i left the game')
+    })
+
+    socket.on('login', function(msg){
+        console.log('login msg:' + msg);
+        //app.session.user = msg;
+        // check login request
+
+        // send answer to socket
+        //socket.emit...
+    })
+
+});
+
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  let port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  let bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  let addr = server.address();
+  let bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

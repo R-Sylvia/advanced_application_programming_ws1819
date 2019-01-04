@@ -1,0 +1,205 @@
+/* **************************************** */
+/* ----------- RESET STYLESHEET ----------- */
+/* **************************************** */
+
+/* 
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com 
+Twitter: @rich_clark
+*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    line-height: 1;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+    nav ul {
+        list-style: none;
+    }
+
+blockquote, q {
+    quotes: none;
+}
+
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+        content: '';
+        content: none;
+    }
+
+a {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color: #ff9;
+    color: #000;
+    text-decoration: none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color: #ff9;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom: 1px dotted;
+    cursor: help;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* change border colour to suit your needs */
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cccccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+input, select {
+    vertical-align: middle;
+}
+
+
+/* **************************************** */
+/* -------- END OF RESET STYLESHEET ------- */
+/* **************************************** */
+
+/* **************************************** */
+/* ------------ DESKTOP VERSION ----------- */
+/* **************************************** */
+
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: rgb(225, 243, 246);
+    /*background-size: cover;
+    background-position: center;*/
+    font-family: 'DejaVu Serif', 'Times New Roman';
+}
+.canvas {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+.signup {
+    position: absolute;
+    width: 320px;
+    height: 490px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 70px 30px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+}
+
+h1 {
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.signup p {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+}
+
+.signup input {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.signup input[type=text], input[type=password] {
+    border: none;
+    border-bottom: 1px solid #fff;
+    background: transparent;
+    outline: none;
+    height: 40px;
+    color: #fff;
+}
+
+.signup input[type=submit] {
+    border: none;
+    outline: none;
+    height: 30px;
+    background: #5e5555;
+    color: #fff;
+    font-size: 15px;
+    border-radius: 20px;
+}
+
+.signup input[type=submit]:hover {
+    cursor: pointer;
+    background-color: mediumslateblue;
+    color: #000;
+}
+.signup a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #fff;
+}
+
+.signup a:hover {
+    color: mediumslateblue;
+}
