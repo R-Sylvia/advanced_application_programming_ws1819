@@ -411,6 +411,7 @@ function mycb(event){
     if(event.keyCode == 68){ //d  (right)
         if(avatars[playerID].position.x + stepDistance < 495/1000*myWorld.edge2){
             avatars[playerID].position.x += stepDistance;
+            sendPos();
             moveJoints();
         }
         else{
@@ -420,6 +421,7 @@ function mycb(event){
     if(event.keyCode == 65){ //a  (left)
         if(avatars[playerID].position.x - stepDistance > -495/1000*myWorld.edge2){
             avatars[playerID].position.x -= stepDistance;
+            sendPos();
             moveJoints();
         }
         else{
@@ -429,6 +431,7 @@ function mycb(event){
     if(event.keyCode == 87){ //w  (forward)
         if(avatars[playerID].position.z - stepDistance > -495/1000*myWorld.edge1){
             avatars[playerID].position.z -= stepDistance;
+            sendPos();
             moveJoints();
         }
         else{
@@ -438,6 +441,7 @@ function mycb(event){
     if(event.keyCode == 83){ //s  (backward)
         if(avatars[playerID].position.z + stepDistance < 495/1000*myWorld.edge2){
             avatars[playerID].position.z += stepDistance;
+            sendPos();
             moveJoints();
         }
         else{
@@ -456,9 +460,7 @@ function updateAvatarPos(){
         void
     */
     "use strict";
-
     // try:
-
     for (let i=0;i<numPlayers;++i){		// TODO only for those avatars who exist
         /*for (let j=0;i<3;++j){
             posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
@@ -467,6 +469,22 @@ function updateAvatarPos(){
             avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
             console.log('updated player: ' + i)
         }
+    }
+}
+
+function sendPos(){
+	/*
+    Description:
+        This function informs the server of the avatar (playerID) new position
+    @return:
+        void
+    */
+	if (gameRunning) {
+		posi = new Array(3)
+		posi[0] = avatars[playerID].position.x
+		posi[1] = avatars[playerID].position.y
+		posi[2] = avatars[playerID].position.z
+		socket.emit('position update', {id: playerID, position: JSON.stringify(posi)})
     }
 }
 
@@ -480,13 +498,6 @@ function render() {
     controls.update();
     renderer.render(scene, camera);
     // send position update, i.e. send avatar[playerID].position - how to?
-	if (gameRunning) {
-		posi = new Array(3)
-		posi[0] = avatars[playerID].position.x
-        posi[1] = avatars[playerID].position.y
-        posi[2] = avatars[playerID].position.z
-        socket.emit('position update', {id: playerID, position: JSON.stringify(posi)})
-    }
 }
 
 render();
