@@ -16,11 +16,12 @@ module.exports = class GameBase {
         this.scores = new Array(this.maxPlayers)
         // array to store objects to grab
         //this.itemsToGrab = new Array(100)
-        this.server = {	array0 : new Array(100),
-						array1 : new Array(100),
-						array2 : new Array(100),
-						array3 : new Array(100),
-						array4 : new Array(100) }
+        const numItems = 1;
+        this.server = {	array0 : new Array(numItems),
+						array1 : new Array(numItems),
+						array2 : new Array(numItems),
+						array3 : new Array(numItems),
+						array4 : new Array(numItems) }
 
         this.scaleFactor = 1/5;   //change size of all objects but keep proportions
         this.myAvatar = {
@@ -210,6 +211,13 @@ module.exports = class GameBase {
                 dist = 0;
             }
             if(	distance2D <= dist){
+            	console.log(this.avatars[j][0]);
+            	console.log(this.server.array2[i]);
+            	console.log(this.avatars[j][1]);
+            	console.log(this.server.array4[i]);
+            	console.log(dist);
+            	console.log(distance2D);
+            	
                 let indexItemToRemove = i		// TODO indexItemToRemove was not declared below. correct with i ???
 				deleted[indexcounter] = indexItemToRemove;
 				indexcounter++
