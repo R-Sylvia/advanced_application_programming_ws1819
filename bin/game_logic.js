@@ -3,6 +3,8 @@
  * server side game logic
  */
 
+let three = require('../public/javascripts/three.min') // "include" three.min.js
+
 module.exports = class GameBase {
 
     constructor(maxplay){
@@ -19,6 +21,12 @@ module.exports = class GameBase {
     initialise() {
         // current player count
         this.numPlayers = 0;
+        for(let i = 0; i < this.maxPlayers; i++) {
+        	this.avatars[i] = new Array(3)
+			this.avatars[i][0] = null
+			this.avatars[i][1] = null
+			this.avatars[i][2] = null
+		}
 
         // initialise array itemsToGrab
 
@@ -28,7 +36,10 @@ module.exports = class GameBase {
         if (this.numPlayers < this.maxPlayers) {
             // add player
             this.numPlayers += 1
-            this.avatars[this.numPlayers - 1] = this.numPlayers //placeholder for: new THREE.Object3D();
+			//this.avatars[this.numPlayers - 1] = new Array(3)
+            this.avatars[this.numPlayers - 1][0] = 0
+			this.avatars[this.numPlayers - 1][1] = 0
+            this.avatars[this.numPlayers - 1][2] = 0// = this.numPlayers //placeholder for: new THREE.Object3D(); start position 0,0,0
             this.scores[this.numPlayers - 1] = 0
             return this.numPlayers - 1  // new player's id
         } else {
@@ -46,7 +57,8 @@ module.exports = class GameBase {
     updatePlayerPosition(player, position) {    // position is a placeholder
         if (player < this.numPlayers) {
             // update player's position
-
+			//this.avatars[player] = position
+			this.avatars[player] = position
             // update scores and itemarray
             return true
         } else {
@@ -68,18 +80,118 @@ module.exports = class GameBase {
     }
 
 
+	////////////////////////////////////////////////////
+	///////////////  SERVER GAME LOGIC    //////////////
+	////////////////////////////////////////////////////
 
-// typedefinition player (e.g. struct with position and score and name?)
+	createItems(){
+		/*
+		Description: 
+			This function creates the items that populate the field
+		@return: 
+			void
+		*/
+		"use strict";
+		for (let i=0;i<itemsToGrab.length;++i){
+			let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+			let geometry = randomGeometry();
+			let offset = 0;
+			let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide, 
+													shininess: 50, 
+													color:randomColor()});
+			itemsToGrab[i] = new THREE.Mesh(geometry, material);
+			if(geometry.type === "SphereGeometry"){
+				offset = geometry.parameters.radius;
+			}
+			if(geometry.type === "BoxGeometry"){
+				offset = geometry.parameters.height/2;
+			}
+			if(geometry.type === "CylinderGeometry"){
+				offset = geometry.parameters.height/2;
+			}
+			itemsToGrab[i].position.y = offset+0.01;
+			itemsToGrab[i].position.x = myWorld.edge1  * 9/10 * (Math.random()-0.5);
+			itemsToGrab[i].position.z = myWorld.edge2  * 9/10 * (Math.random()-0.5);
+			scene.add(itemsToGrab[i]);
+		}
+	}
 
-    /**
-     * variable.
-     * list of objects in the gamefield, send to all clients via websocket so they can display the game
-     */
-// object list
 
-    /**
-     * function that checks if any player has hit an object and reacts on that (e.g. delete something from the object list, update points
-     */
-// function collisionDetection()...
+	randomColor(){
+		/*
+		Description:
+			This function selects a random color
+		@return: THREE.Color
+			Random color
+		*/
+		"use strict";
+		const color = new THREE.Color(Math.random(), Math.random(), Math.random());
+		return color;
+	}
 
+
+	randomGeometry(){
+		/*
+		This function selects a random geometrical object among a few predefined options
+		@return: Three.Geometry
+			Geometry of the random object
+		*/
+		"use strict";
+		const selectGeo = Math.random();
+		if(selectGeo < 1/3){
+			return new THREE.SphereGeometry(randomSize(), 10, 10);
+		}
+		else if(selectGeo < 2/3){
+			let size = randomSize();
+			return new THREE.CylinderGeometry(size, size, size, 16);
+		}
+		else{
+			let size = randomSize();
+			return new THREE.BoxGeometry(size, size, size);
+		}
+	}
+
+	randomSize(){
+		/*
+		This function selects a random size within a range
+		@return: Number
+			Number denoting random size
+		*/
+		"use strict";
+		return myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+	}
+
+    detectCollision(j){
+	/*
+    Description: 
+        This function detects the contact between the avatars and the items
+    @input j: number
+        player number
+    @return: 
+        void
+    */
+    "use strict";
+    for (let i=0;i<itemsToGrab.length;++i){
+    	let dist;
+    	let distance2D = Math.sqrt(Math.pow(avatars[j].position.x-itemsToGrab[i].position.x,2)+
+			Math.pow(avatars[j].position.z-itemsToGrab[i].position.z,2));
+    	if(itemsToGrab[i].geometry.type === "SphereGeometry"){
+			dist = itemsToGrab[i].geometry.parameters.radius;
+		}
+		else if(itemsToGrab[i].geometry.type === "BoxGeometry"){
+			dist = itemsToGrab[i].geometry.parameters.width*1.2;
+		}
+		else if(itemsToGrab[i].geometry.type === "CylinderGeometry"){
+			dist = itemsToGrab[i].geometry.parameters.radiusTop;
+		}
+		else{
+			dist = 0;
+		}
+		if(	distance2D <= dist){
+			scene.remove(itemsToGrab[i]);
+			itemsToGrab.splice(i,1);//update clients with this IF CHANGED (FLAG)
+			++scores[j];
+		}
+	}
+	}
 }
