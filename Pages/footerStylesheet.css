@@ -141,27 +141,24 @@ body, html {
     font-family: 'DejaVu Serif', 'Times New Roman';
 }
 
-.space {
-    grid-area: space;
-    min-height: 20px;
-    background-color: lightgray;
-}
-
 .titlegrid {
-    grid-area: titlegrid;
-    display: grid;
-    grid-template-columns: 5% 60% 30% 5%;
-    grid-template-areas: ". title registrationgrid .";
+    position: absolute;
+    width: 100%;
     background-color: lightgray;
 }
 
 .title {
-    grid-area: title;
     font-size: 24px;
+    vertical-align: middle;
+    padding: 10px 0 10px 10px;
 }
 
 .registrationgrid {
-    grid-area: registrationgrid;
+    position: absolute;
+    width: 30%;
+    top: 0;
+    right: 5%;
+    padding: 10px 0 10px 0;
 }
 
 .backButtonArea {
@@ -177,13 +174,6 @@ body, html {
     grid-gap: 10px;
 }
 
-
-.content {
-    grid-area: content;
-    font-family: 'DejaVu Serif', 'Times New Roman';
-    position:relative;
-}
-
 .insideContent {
     width: 90%;
     height: 420px;
@@ -191,13 +181,15 @@ body, html {
     left: 5%;
     box-sizing: border-box;
     position: absolute;
+    margin-top: 15px;
+    font-family: 'DejaVu Serif', 'Times New Roman';
 }
 
 .text, .member {
     font-size: 16px;
     min-height: 22px;
     position: relative;
-    padding: 10px 0 5px 0;
+    padding: 15px 0 5px 0;
     text-decoration: none;
 }
 
@@ -215,21 +207,22 @@ body, html {
 
 .footergrid {
     font-size: 15px;
-    grid-area: footergrid;
-    display: grid;
-    grid-template-columns: 5% 15% 10% 65% 5%;
+    min-height: 30px;
     background-color: lightgray;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
 }
 
 .linkImpressum {
-    grid-column: 2/3;
+    padding: 3px 10px 3px 13px;
     text-decoration: none;
     font-style: normal;
     color: black;
 }
 
 .linkHelp {
-    grid-column: 3/4;
+    padding-left: 10px;
     text-decoration: none;
     font-style: normal;
     color: black;
@@ -239,9 +232,6 @@ body, html {
     width: 90px;
     height: 90px;
     border-radius: 50%;
-   /*
-    top: -50px;
-    left: calc(50% - 50px);*/
 }
 /* **************************************** */
 /* -------- END OF DESKTOP VERSION -------- */

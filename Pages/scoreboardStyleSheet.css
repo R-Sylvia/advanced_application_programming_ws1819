@@ -128,22 +128,18 @@ body, html {
     font-family: 'DejaVu Serif', 'Times New Roman';
 }
 
-.space {
-    grid-area: space;
-    min-height: 20px;
-    background-color: lightgray;
-}
-
 .titlegrid {
-    grid-area: titlegrid;
-    display: grid;
-    grid-template-columns: 5% 60% 30% 5%;
-    grid-template-areas: ". title registrationgrid .";
+    width: 100%;
     background-color: lightgray;
+    position: absolute;
 }
 
-.registrationgrid{
-    grid-area: registrationgrid;
+.registrationgrid {
+    position: absolute;
+    width: 30%;
+    top: 0;
+    right: 5%;
+    padding: 10px 0 10px 0;
 }
 
 .button {
@@ -160,13 +156,9 @@ button:hover {
 }
 
 .title {
-    grid-area: title;
     font-size: 24px;
-}
-
-.content {
-    grid-area: content;
-    position: relative;
+    vertical-align: middle;
+    padding: 10px 0 10px 10px;
 }
 
 .insideContent {
@@ -194,21 +186,22 @@ button:hover {
 
 .footergrid {
     font-size: 15px;
-    grid-area: footergrid;
-    display: grid;
-    grid-template-columns: 5% 15% 10% 65% 5%;
+    min-height: 30px;
     background-color: lightgray;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
 }
 
 .linkImpressum {
-    grid-column: 2/3;
+    padding: 3px 10px 3px 13px;
     text-decoration: none;
     font-style: normal;
     color: black;
 }
 
 .linkHelp {
-    grid-column: 3/4;
+    padding-left: 10px;
     text-decoration: none;
     font-style: normal;
     color: black;

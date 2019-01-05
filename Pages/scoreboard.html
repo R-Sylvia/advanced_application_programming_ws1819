@@ -17,41 +17,37 @@
 </head>
 <body>
     <div class="maingrid">
-        <div class="space"></div>
-        <div class="titlegrid" style="min-height:30px">
+        <div class="titlegrid" style="min-height:40px">
             <div class="title">Winners of Grab <letterspace style="letter-spacing:10px">IT</letterspace></div>
             <div class="registrationgrid">
                 <button class="button" type="button" onclick="window.history.back()">Back</button>
             </div>
         </div>
-        <div class="content">
-            <div class="insideContent">
-                <div class="scoreboard" id="scoreboard">
-                    <div class="scoreentry"></div>
-                </div>
+        <div class="insideContent">
+            <div class="scoreboard" id="scoreboard">
+                <div class="scoreentry"></div>
             </div>
-
-            <div class="canvas">
-                <canvas class="canvas"></canvas>
-                <script src="canvas.js"></script>
-            </div>
+        </div>
+        <div class="canvas">
+            <canvas class="canvas"></canvas>
+            <script src="canvas.js"></script>
         </div>
         <div class="footergrid">
             <a class="linkImpressum" href="impressum.html">Impressum</a>
             <a class="linkHelp" href="help.html">Help</a>
         </div>
-        <div class="space"></div>
     </div>
     <script>
         var socket = io.connect();
         var $scoreboard = $('#scoreboard');
-
+        /*
+         * TEST
         function init() {
             console.log("INIT");
             //request sorted score data for loading the score board
             socket.emit('load main scoreboard');
         };
-
+        */
         //Receiving "load main scoreboard" message from server
         socket.on('update main scoreboard', function (data) {
             for (i = 0; i < data.length; i++) {
@@ -60,7 +56,6 @@
             }
         });
 
-        init();
     </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 var canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-canvas.height -= 87;
+//canvas.height -= 87;
 
 var c = canvas.getContext('2d');
 
@@ -138,7 +138,7 @@ function initialize() {
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    canvas.height -= 87;
+    //canvas.height -= 87;
     animate();
 }
 initialize();
