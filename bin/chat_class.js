@@ -23,4 +23,5 @@ module.exports = class Chat {
     broadcastToRoom(type, msg) {
         this.webSocketServer.to(this.room).emit(type, msg)
     }
+
 }

@@ -32,6 +32,7 @@ module.exports = class GameBase {
             edge1 : 1000,
             edge2 : 1000
         };
+        this.gameRunning = false
     }
 
     initialise() {
@@ -45,9 +46,10 @@ module.exports = class GameBase {
 
         // initialise array itemsToGrab
         this.createItems()
+        this.gameRunning = true
     }
 
-    addPlayer() {
+    addPlayer(name) {
         if (this.numPlayers < this.maxPlayers) {
             // add player
             this.numPlayers += 1
@@ -62,7 +64,8 @@ module.exports = class GameBase {
 			}
             this.avatars[id][0] = 0
 			this.avatars[id][1] = 0
-            this.scores[id] = 0
+            this.scores[id] = { name: name,
+                                score: 0}
             return id  // new player's id
         } else {
             // no new player can be added
@@ -72,9 +75,20 @@ module.exports = class GameBase {
 
     // no safety check yet
     removePlayer(id){
-        this.numPlayers -= 1;
-        this.avatars[id][0] = null;
-        this.avatars[id][1] = null;
+        if (id < this.maxPlayers) {
+            this.numPlayers -= 1;
+            this.avatars[id][0] = null;
+            this.avatars[id][1] = null;
+            this.scores[id] = null
+            if (this.numPlayers <= 0) { // gamefinished here
+                this.gameRunning = false
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
     }
 
     updatePlayerPosition(player, position) {    // position is a placeholder
@@ -100,8 +114,20 @@ module.exports = class GameBase {
         return this.scores;
     }
 
+    getScoresSorted() {
+        return this.scores.filter(e => e !== null).sort((e1, e2) => e2.score - e1.score)
+    }
+
     getItems() {
         return this.server;
+    }
+
+    getPlayerScore(id) {
+        return this.scores[id];
+    }
+
+    getGameRunning() {
+        return this.gameRunning;
     }
 
 
@@ -208,8 +234,6 @@ module.exports = class GameBase {
         //server.array3[i] stores y-coordinate
         //server.array4[i] stores z-coordinate
     "use strict";
-    console.log('detection collision called')
-		console.log('colosion detect posi: ' + this.avatars[j][0] + ' and: ' + this.avatars[j][1])
     	let deleted = []	// array to store indexes to be removed
 		let indexcounter = 0
         for (let i=0;i<this.server.array0.length;++i){
@@ -231,14 +255,7 @@ module.exports = class GameBase {
 
             if(	distance2D <= dist){
 
-                console.log(this.avatars[j][0]);
-                console.log(this.server.array2[i]);
-                console.log(this.avatars[j][1]);
-                console.log(this.server.array4[i]);
-                console.log(dist);
-                console.log(distance2D);
-
-                let indexItemToRemove = i		// TODO indexItemToRemove was not declared below. correct with i ???
+                let indexItemToRemove = i
 				deleted[indexcounter] = indexItemToRemove;
 				indexcounter++
 				console.log('deleted item: ' + indexItemToRemove)
@@ -247,8 +264,11 @@ module.exports = class GameBase {
                 this.server.array2.splice(indexItemToRemove,1);
                 this.server.array3.splice(indexItemToRemove,1);
                 this.server.array4.splice(indexItemToRemove,1);
-                ++this.scores[j];
+                ++this.scores[j].score;
             }
+        }
+        if (this.server.array0.length <= 0) {
+            this.gameRunning = false
         }
         return deleted;
 	}
