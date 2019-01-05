@@ -218,6 +218,8 @@ app.post("/updatePosition", function(req, res) {
 })
 
 
+
+
 // helper function
 function insertUser (user, cb) {
     var dbo = database.db('mydb')
