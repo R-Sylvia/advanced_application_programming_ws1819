@@ -42,7 +42,7 @@
         </div>
     </div>
     <script>
-        //var socket = io.connect();
+        var socket = io.connect();
         var $chatform = $('#chatform');
         var $message = $('#message');
         var $chatentry = $('#chatentry');
@@ -55,12 +55,12 @@
             $message.val('');
         });
         //SERVER SIDE CODE
-        
+        /*
         //Send Message
         socket.on('chat message', function (data) {
             io.sockets.emit('new message', { msg: data, user: socket.username });
         });
-        
+        */
 
         //Receiving new message and displaying it
         socket.on('new message', function (data) {
@@ -69,7 +69,7 @@
         });
 
         //Receiving "update scoreboard" message from server
-        //socket.on('update scoreboard', function (data) {
+        socket.on('current scores', function (data) {
             var html = '';
             for (i = 1; i <= data.length; i++) {
                 html += '<p class="score">' + (i + 1) + '.  ' + data[i].user + '  ' + data[i].msg + '</p>';
