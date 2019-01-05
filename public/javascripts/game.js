@@ -533,8 +533,8 @@ function createClientItems(){
             shininess: 50,
             color:randomColor});
         itemsToGrab[i] = new THREE.Mesh(geometry, material);
-        itemsToGrab[i].position.y = server.array2[i];
-        itemsToGrab[i].position.x = server.array3[i];
+        itemsToGrab[i].position.x = server.array2[i];
+        itemsToGrab[i].position.y = server.array3[i];
         itemsToGrab[i].position.z = server.array4[i];
         scene.add(itemsToGrab[i]);
     }

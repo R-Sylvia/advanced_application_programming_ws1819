@@ -141,8 +141,8 @@ module.exports = class GameBase {
                 this.server.array0[i] = 2;
                 this.server.array1[i] = offset*2;
             }
-            this.server.array2[i] = offset+0.01;
-            this.server.array3[i] = this.myWorld.edge1  * 9/10 * (Math.random()-0.5);
+            this.server.array3[i] = offset+0.01;
+            this.server.array2[i] = this.myWorld.edge1  * 9/10 * (Math.random()-0.5);
             this.server.array4[i] = this.myWorld.edge2  * 9/10 * (Math.random()-0.5);
         }
 	}
@@ -167,6 +167,7 @@ module.exports = class GameBase {
 		@return: Three.Geometry
 			Geometry of the random object
 		*/
+
 		"use strict";
 		const selectGeo = Math.random();
 		if(selectGeo < 1/3){
@@ -201,6 +202,11 @@ module.exports = class GameBase {
     @return: 
         void
     */
+        //server.array0[i] stores geometry type
+        //server.array1[i] stores radius of item
+        //server.array2[i] stores x-coordinate
+        //server.array3[i] stores y-coordinate
+        //server.array4[i] stores z-coordinate
     "use strict";
     console.log('detection collision called')
 		console.log('colosion detect posi: ' + this.avatars[j][0] + ' and: ' + this.avatars[j][1])
@@ -224,12 +230,14 @@ module.exports = class GameBase {
             }
 
             if(	distance2D <= dist){
+
                 console.log(this.avatars[j][0]);
                 console.log(this.server.array2[i]);
                 console.log(this.avatars[j][1]);
                 console.log(this.server.array4[i]);
                 console.log(dist);
                 console.log(distance2D);
+
                 let indexItemToRemove = i		// TODO indexItemToRemove was not declared below. correct with i ???
 				deleted[indexcounter] = indexItemToRemove;
 				indexcounter++
