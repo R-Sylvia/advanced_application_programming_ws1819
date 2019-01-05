@@ -648,9 +648,7 @@ function startGame() {
         newscores = JSON.parse(msg.scores)
         var html = '';
         for (i = 0; i < names.length; i++) {
-            html += '<p class="username">' + names[i] + '</p>';
-            html += '<p class="score">' + newscores[i] + '</p>';
-            html += '<br>'
+	    html += '<p class="score">' + (i + 1) + '.  ' + names[i] + '  ' + newscores[i] + '</p>';
         }
         $("#scoreentry").html(html);
     });
