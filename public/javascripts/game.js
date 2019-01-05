@@ -128,6 +128,15 @@ function getUserName() {
                     createFence();
                     createAvatars();
 
+                    // create items
+                    server.array0 = JSON.parse(responsedata.array0)
+                    server.array1 = JSON.parse(responsedata.array1)
+                    server.array2 = JSON.parse(responsedata.array2)
+                    server.array3 = JSON.parse(responsedata.array3)
+                    server.array4 = JSON.parse(responsedata.array4)
+                    console.log(server.array0)
+                    createClientItems()
+
                 }
             } );
         } else {
@@ -470,9 +479,10 @@ function updateAvatarPos(){
         /*for (let j=0;i<3;++j){
             posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
         }*/
-        if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null)) {
-            avatars[i].position.set(posAvatar[i][0], myAvatar.height/2, posAvatar[i][1]);
-            console.log('updated player: ' + i)
+        if (gameRunning) {
+            if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null)) {
+                avatars[i].position.set(posAvatar[i][0], myAvatar.height / 2, posAvatar[i][1]);
+            }
         }
     }
 }
@@ -489,6 +499,7 @@ function sendPos(){
         posi[0] = avatars[playerID].position.x;
         posi[1] = avatars[playerID].position.z;
         socket.emit('position update', {id: playerID, position: JSON.stringify(posi)});
+        console.log('client send pos: ' + posi)
     }
 }
 
@@ -600,6 +611,8 @@ function startGame() {
     socket.on('chat message', function (msg) {
         // add message to chat
         console.log("received chat message")
+        //$("chatentry").append('<p class="username"><strong>' + data.user + '</strong>:</p>');
+        $("#chatentry").append('<p class="usermessage">' + msg + '</p>');
     });
 
     socket.on('avatar positions', function (msg) {
@@ -622,6 +635,7 @@ function startGame() {
 
     });
 
+    /*
     socket.on('item positions', function (msg) {
         // render new gamefield
         // reset item array
@@ -635,7 +649,7 @@ function startGame() {
         console.log(server.array0)
         createClientItems()
     });
-
+    */
     socket.on('current scores', function (msg) {
         // render new gamefield
         // reset score array
@@ -654,7 +668,16 @@ function startGame() {
         items = JSON.parse(msg.items)
         console.log(items)
         deleteItems(items)
-    })
+    });
+
+    socket.on('update scoreboard', function (data) {
+        var html = '';
+        for (i = 1; i <= data.length; i++) {
+            html += '<p class="username">' + data[i].user + '</p>';
+            html += '<p class="score">' + data[i].msg + '</p>';
+        }
+        $("scoreentry").html(html);
+    });
 }
 
 
@@ -663,7 +686,19 @@ function startGame() {
  */
 // function displayGame()...
 
+
 $("#btn_exit").click(function() {
     console.log("clicked exit")
     socket.emit('player quits', {id: playerID, user: username})
+    window.location.href='menu.html'
+});
+
+
+$(function () {
+    $('form').submit(function (e) {
+        console.log('function called')
+        e.preventDefault();
+        socket.emit('send message', username + ': ' + $("#message").val());
+        $("#message").val('')
+    });
 });

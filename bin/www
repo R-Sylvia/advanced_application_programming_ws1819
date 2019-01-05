@@ -71,7 +71,7 @@ wsServer.on('connection', function(socket){
     socket.on('disconnect', function(){
         console.log('user disconnected');
     });
-    socket.on('chat message', function(msg){
+    socket.on('send message', function(msg){
         console.log('message: ' + msg);
         chat.broadcastMessage('chat message', msg);
     });
@@ -91,10 +91,16 @@ wsServer.on('connection', function(socket){
             socket.join(chat.getRoomName())
             currentPlayerCount += 1;
             // answer the player with his id
-            callbackfn({answer: true, id: ans})
+            items = game.getItems()
+            callbackfn({answer: true, id: ans,
+                        array0: JSON.stringify(items.array0),
+                        array1: JSON.stringify(items.array1),
+                        array2: JSON.stringify(items.array2),
+                        array3: JSON.stringify(items.array3),
+                        array4: JSON.stringify(items.array4)})
 
             // broadcast a message to all current players
-            chat.broadcastToRoom('chat message', msg.user + ' i entered the game')
+            chat.broadcastToRoom('chat message', msg.user + ': i entered the game')
             // broadcast avatar array
             players = game.getPlayers()
             chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
@@ -103,12 +109,14 @@ wsServer.on('connection', function(socket){
                                                         fourth: JSON.stringify(players[3]),
                                                         fifth: JSON.stringify(players[4])})
             // broadcast item array
+            /*
             items = game.getItems()
             chat.broadcastToRoom('item positions', {array0: JSON.stringify(items.array0),
                                                     array1: JSON.stringify(items.array1),
                                                     array2: JSON.stringify(items.array2),
                                                     array3: JSON.stringify(items.array3),
                                                     array4: JSON.stringify(items.array4)})
+                                                    */
             // broadcast scores
             chat.broadcastToRoom('current scores', {scores: JSON.stringify(game.getScores())})
         }
@@ -118,20 +126,24 @@ wsServer.on('connection', function(socket){
         // trigger collisiotn detection
         // new item array sent if new
         game.updatePlayerPosition(msg.id, JSON.parse(msg.position))
-        console.log(JSON.parse((msg.position)))
+        items = game.detectCollision(msg.id)
+        console.log('position www: ' + JSON.parse((msg.position)))
         players = game.getPlayers()
         chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
                                                     second: JSON.stringify(players[1]),
                                                     third: JSON.stringify(players[2]),
                                                     fourth: JSON.stringify(players[3]),
                                                     fifth: JSON.stringify(players[4])})
-        items = game.detectCollision(msg.id)
+
         if (items.length > 0) {
             chat.broadcastToRoom('delete items', {items: JSON.stringify(items)})
         }
     })
 
     socket.on('player quits', function(msg){
+        console.log('player quits')
+        // tell other players about leaving
+        chat.broadcastToRoom('chat message', msg.user + ': i left the game')
         // remove the player from game by id
         game.removePlayer(msg.id);
         // remove socket from room
@@ -143,8 +155,7 @@ wsServer.on('connection', function(socket){
                                                     third: JSON.stringify(players[2]),
                                                     fourth: JSON.stringify(players[3]),
                                                     fifth: JSON.stringify(players[4])})
-        // tell other players about leaving
-        chat.broadcastToRoom('chat message', msg.user + ': i left the game')
+
     })
 
     socket.on('load main scoreboard', function(msg){

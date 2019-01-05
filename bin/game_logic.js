@@ -16,12 +16,11 @@ module.exports = class GameBase {
         this.scores = new Array(this.maxPlayers)
         // array to store objects to grab
         //this.itemsToGrab = new Array(100)
-        const numItems = 1;
-        this.server = {	array0 : new Array(numItems),
-						array1 : new Array(numItems),
-						array2 : new Array(numItems),
-						array3 : new Array(numItems),
-						array4 : new Array(numItems) }
+        this.server = {	array0 : new Array(100),
+						array1 : new Array(100),
+						array2 : new Array(100),
+						array3 : new Array(100),
+						array4 : new Array(100) }
 
         this.scaleFactor = 1/5;   //change size of all objects but keep proportions
         this.myAvatar = {
@@ -52,10 +51,19 @@ module.exports = class GameBase {
         if (this.numPlayers < this.maxPlayers) {
             // add player
             this.numPlayers += 1
-            this.avatars[this.numPlayers - 1][0] = 0
-			this.avatars[this.numPlayers - 1][1] = 0
-            this.scores[this.numPlayers - 1] = 0
-            return this.numPlayers - 1  // new player's id
+			let id = -1
+			for (let i = 0; i < this.maxPlayers; i++) {
+				if ((this.avatars[i][0] === null) && (this.avatars[i][1] === null) && (id < 0)){
+					id = i;
+				}
+			}
+			if (id < 0) {
+				return false
+			}
+            this.avatars[id][0] = 0
+			this.avatars[id][1] = 0
+            this.scores[id] = 0
+            return id  // new player's id
         } else {
             // no new player can be added
             return false
@@ -65,14 +73,17 @@ module.exports = class GameBase {
     // no safety check yet
     removePlayer(id){
         this.numPlayers -= 1;
-        this.avatars[id] = null;
+        this.avatars[id][0] = null;
+        this.avatars[id][1] = null;
     }
 
     updatePlayerPosition(player, position) {    // position is a placeholder
+    	console.log('position logic: ' + position)
         if (player < this.numPlayers) {
             // update player's position
 			//this.avatars[player] = position
 			this.avatars[player] = position
+			console.log('in array: ' + this.avatars[player])
             // update scores and itemarray
             return true
         } else {
@@ -192,6 +203,7 @@ module.exports = class GameBase {
     */
     "use strict";
     console.log('detection collision called')
+		console.log('colosion detect posi: ' + this.avatars[j][0] + ' and: ' + this.avatars[j][1])
     	let deleted = []	// array to store indexes to be removed
 		let indexcounter = 0
         for (let i=0;i<this.server.array0.length;++i){
@@ -210,14 +222,14 @@ module.exports = class GameBase {
             else{
                 dist = 0;
             }
+
             if(	distance2D <= dist){
-            	console.log(this.avatars[j][0]);
-            	console.log(this.server.array2[i]);
-            	console.log(this.avatars[j][1]);
-            	console.log(this.server.array4[i]);
-            	console.log(dist);
-            	console.log(distance2D);
-            	
+                console.log(this.avatars[j][0]);
+                console.log(this.server.array2[i]);
+                console.log(this.avatars[j][1]);
+                console.log(this.server.array4[i]);
+                console.log(dist);
+                console.log(distance2D);
                 let indexItemToRemove = i		// TODO indexItemToRemove was not declared below. correct with i ???
 				deleted[indexcounter] = indexItemToRemove;
 				indexcounter++

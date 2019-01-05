@@ -52,6 +52,7 @@ $(function () {
             }
 
             $.ajax(settings).done(function (response) {
+                console.log('received response')
                 if (response.status == 200) {
                     console.log("login was successful")
                     console.log(response.data)
