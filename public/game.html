@@ -16,43 +16,33 @@
     <title>GrabIT Game page</title>
 </head>
 <body>
-<div class="wrapper">
-    <div class="space"></div>
-    <div class="titlegrid" style="min-height:30px">
-        <div class="title">Let's Play Grab <letterspace style="letter-spacing:10px">IT</letterspace></div>
-        <div class="registrationgrid">
-            <button class="button" type="button" id="btn_exit" >Ex <letterspace style="letter-spacing:5px">IT</letterspace></button>
+    <div class="wrapper">
+        <div class="titlegrid" style="min-height:40px">
+            <div class="title">Let's Play Grab <letterspace style="letter-spacing:10px">IT</letterspace></div>
+            <div class="registrationgrid">
+                <button class="button" type="button" onclick="window.location.href='menu.html'">Ex <letterspace style="letter-spacing:5px">IT</letterspace></button>
+            </div>
         </div>
-    </div>
-    <div class="game">
-        <div class="scoreboard">
-            SCOREBOARD
+        <div class="scoreboard"><strong>SCOREBOARD</strong>
             <div class="table">
-                <ul class="scoreentry" id="scoreentry">
-                    <p class="username"></p>
-                    <p class="score"></p>
-                </ul>
-            </div>
-        </div>
-        <div id="messageArea" class="row">
-            <div class="chatbox">
-                <div class="chatlogs">
-                    <div class="chatentry" id="chatentry"></div>
+                <div class="scoreentry" id="scoreentry">
                 </div>
-                <form id="messageForm">
-                    <div class="chatform">
-                        <textarea class="form-control" id="message"></textarea>
-                        <input type="submit" class="SendBtn" value="Send"/>
-                    </div>
-                </form>
             </div>
         </div>
+        <div class="chatbox">
+            <div class="chatlogs">
+                <div class="chatentry" id="chatentry"></div>
+            </div>
+        </div>
+        <form class="chatform" id="chatform">
+            <textarea class="form-control" id="message"></textarea>
+            <input type="submit" class="SendBtn" value="Send" />
+        </form>
         <div class="canvas">
-            <canvas id="canvas" width="window.innerWidth" height="window.innerHeight - 87"></canvas>
-            <!--script src="javascripts/canvas.js"></script-->
+            <canvas class="canvas"></canvas>
+            <script src="canvas.js"></script>
         </div>
     </div>
-</div>
     <script src="./javascripts/game.js"></script>
 </body>
 </html>
