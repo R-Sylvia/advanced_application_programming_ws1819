@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+
 /**
  * Module dependencies.
  */
@@ -12,7 +13,7 @@ let http = require('http');
 
 let chatclass = require('./chat_class');
 let gameclass = require('./game_logic');
-let game = new gameclass(5);
+let game = new gameclass();
 let currentPlayerCount = 0;
 let playersInGame = new Array(5)
 for (let i = 0; i < playersInGame.length; i++){
@@ -43,30 +44,8 @@ let chat = new chatclass(wsServer);
 
 
 server.listen(port);
-//server.on('error', onError);
-//server.on('listening', onListening);
 
-// WebSocket server
-/*
-wsServer.on('request', function(request) {
-    let connection = request.accept(null, request.origin);
 
-    console.log('function on called');
-
-    // This is the most important callback for us, we'll handle
-    // all messages from users here.
-    connection.on('message', function(message) {
-        console.log(message);
-        if (message.type === 'utf8') {
-            // process WebSocket message
-        }
-    });
-
-    connection.on('close', function(connection) {
-        // close user connection
-    });
-});
-*/
 
 
 wsServer.on('connection', function(socket){
@@ -148,10 +127,15 @@ wsServer.on('connection', function(socket){
                                                     scores: JSON.stringify(points)})
             if (!game.getGameRunning()) {
                 chat.broadcastToRoom('game ends', {})
+                let finalscores = game.getScoresSorted()
+                for (let i = 0; i < finalscores.length; i++) {
+                    app.update(finalscores[i].name, finalscores[i].score)
+                }
                 currentPlayerCount = 0
                 for (let i = 0; i < playersInGame.length; i++) {
                     playersInGame[i] = false
                 }
+
             }
         }
 
@@ -160,6 +144,7 @@ wsServer.on('connection', function(socket){
 
     socket.on('player quits', function(msg){
         console.log('player quits')
+        app.update(msg.user, game.getPlayerScore(msg.id))
         // tell other players about leaving
         chat.broadcastToRoom('chat message', msg.user + ': i left the game')
         // remove the player from game by id
@@ -188,8 +173,11 @@ wsServer.on('connection', function(socket){
     })
 
     // listener for request on Scoreboard outside the game
-    socket.on('load main scoreboard', function(msg){
-
+    socket.on('load main scoreboard', function(msg) {
+        app.aggregate(function(responsedata) {
+            console.log('result: ' + responsedata)
+            socket.emit('update main scoreboard', {names: JSON.stringify(responsedata.names), scores: JSON.stringify(responsedata.scores)})
+        })
     })
 
 });

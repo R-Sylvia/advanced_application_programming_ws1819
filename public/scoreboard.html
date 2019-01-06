@@ -39,24 +39,39 @@
         </div>
     </div>
     <script>
-        var socket = io.connect();
+        var socket = io(); //.connect();
         var $scoreboard = $('#scoreboard');
-        /*
+
         /*TEST*/
+
+        socket.on('connect', () => {
+            init()
+        });
+
         function init() {
             console.log("INIT");
             //request sorted score data for loading the score board
-            socket.emit('load main scoreboard');
+            socket.emit('load main scoreboard')/*, function (data) {
+                let names = JSON.parse(data.names)
+                let scores = JSON.parse(data.scores)
+                for (i = 0; i < names.length; i++) {
+                    $scoreboard.append('<p class="scoreentry"><strong>' + (i+1) + '</strong>    ' + names[i] + '    ' + scores[i] + '</p>');
+                    $scoreboard.append('<p class="scoreentry">__________________________________________________________________</p>');
+                }
+            })*/
         };
-        */
-        
+
+
         //Receiving "load main scoreboard" message from server
         socket.on('update main scoreboard', function (data) {
-            for (i = 0; i < data.length; i++) {
-                $scoreboard.append('<p class="scoreentry"><strong>' + (i+1) + '</strong>    ' + data[i].user + '    ' + data[i].msg + '</p>');
+            let names = JSON.parse(data.names)
+            let scores = JSON.parse(data.scores)
+            for (i = 0; i < names.length; i++) {
+                $scoreboard.append('<p class="scoreentry"><strong>' + (i+1) + '</strong>    ' + names[i] + '    ' + scores[i] + '</p>');
                 $scoreboard.append('<p class="scoreentry">__________________________________________________________________</p>');
             }
         });
+
 
         //init();
     </script>

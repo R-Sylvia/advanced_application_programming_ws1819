@@ -7,9 +7,9 @@ let THREE = require('../public/javascripts/three.min') // "include" three.min.js
 
 module.exports = class GameBase {
 
-    constructor(maxplay){
+    constructor(){
         // maximum number of players
-        this.maxPlayers = maxplay
+        this.maxPlayers = 5
         // array to store players
         this.avatars = new Array(this.maxPlayers)
         // array to store scores
@@ -93,7 +93,7 @@ module.exports = class GameBase {
 
     updatePlayerPosition(player, position) {    // position is a placeholder
     	console.log('position logic: ' + position)
-        if (player < this.numPlayers) {
+        if (player < this.maxPlayers) {
             // update player's position
 			//this.avatars[player] = position
 			this.avatars[player] = position
@@ -123,7 +123,7 @@ module.exports = class GameBase {
     }
 
     getPlayerScore(id) {
-        return this.scores[id];
+        return this.scores[id].score;
     }
 
     getGameRunning() {

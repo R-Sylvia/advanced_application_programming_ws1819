@@ -20,7 +20,7 @@
         <div class="titlegrid" style="min-height:40px">
             <div class="title">Let's Play Grab <letterspace style="letter-spacing:10px">IT</letterspace></div>
             <div class="registrationgrid">
-                <button class="button" type="button" onclick="window.location.href='menu.html'">Ex <letterspace style="letter-spacing:5px">IT</letterspace></button>
+                <button class="button" type="button" id="btn_exit">Ex <letterspace style="letter-spacing:5px">IT</letterspace></button>
             </div>
         </div>
         <div class="scoreboard"><strong>SCOREBOARD</strong>
@@ -39,8 +39,7 @@
             <input type="submit" class="SendBtn" value="Send" />
         </form>
         <div class="canvas">
-            <canvas class="canvas"></canvas>
-            <script src="canvas.js"></script>
+            <canvas id="canvas" width="window.innerWidth" height="window.innerHeight"></canvas>
         </div>
     </div>
     <script src="./javascripts/game.js"></script>
