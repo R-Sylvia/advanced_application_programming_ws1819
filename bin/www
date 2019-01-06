@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+
 /**
  * Module dependencies.
  */
@@ -12,8 +13,12 @@ let http = require('http');
 
 let chatclass = require('./chat_class');
 let gameclass = require('./game_logic');
-let game = new gameclass(5);
+let game = new gameclass();
 let currentPlayerCount = 0;
+let playersInGame = new Array(5)
+for (let i = 0; i < playersInGame.length; i++){
+    playersInGame[i] = false;
+}
 /**
  * Get port from environment and store in Express.
  */
@@ -39,30 +44,8 @@ let chat = new chatclass(wsServer);
 
 
 server.listen(port);
-//server.on('error', onError);
-//server.on('listening', onListening);
 
-// WebSocket server
-/*
-wsServer.on('request', function(request) {
-    let connection = request.accept(null, request.origin);
 
-    console.log('function on called');
-
-    // This is the most important callback for us, we'll handle
-    // all messages from users here.
-    connection.on('message', function(message) {
-        console.log(message);
-        if (message.type === 'utf8') {
-            // process WebSocket message
-        }
-    });
-
-    connection.on('close', function(connection) {
-        // close user connection
-    });
-});
-*/
 
 
 wsServer.on('connection', function(socket){
@@ -71,7 +54,7 @@ wsServer.on('connection', function(socket){
     socket.on('disconnect', function(){
         console.log('user disconnected');
     });
-    socket.on('chat message', function(msg){
+    socket.on('send message', function(msg){
         console.log('message: ' + msg);
         chat.broadcastMessage('chat message', msg);
     });
@@ -82,29 +65,43 @@ wsServer.on('connection', function(socket){
             game.initialise()
         }
         // try add player
-        let ans = game.addPlayer(msg);
+        let ans = game.addPlayer(msg.user);
         if (ans === false) {
             console.log("can not add player")
             callbackfn({answer: false})
         } else {
             console.log("added new player")
+            playersInGame[ans] = true
+            console.log(playersInGame)
+            chat.broadcastToRoom('new player', {id: ans})
             socket.join(chat.getRoomName())
             currentPlayerCount += 1;
             // answer the player with his id
-            callbackfn({answer: true, id: ans})
+            items = game.getItems()
+            callbackfn({answer: true, id: ans,
+                        array0: JSON.stringify(items.array0),
+                        array1: JSON.stringify(items.array1),
+                        array2: JSON.stringify(items.array2),
+                        array3: JSON.stringify(items.array3),
+                        array4: JSON.stringify(items.array4),
+                        players: JSON.stringify(playersInGame)}
+                        )
 
             // broadcast a message to all current players
-            chat.broadcastToRoom('chat message', msg.user + ' i entered the game')
+            chat.broadcastToRoom('chat message', msg.user + ': i entered the game')
             // broadcast avatar array
-            chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
-                                                        second: JSON.stringify(game.getPlayers()[1]),
-                                                        third: JSON.stringify(game.getPlayers()[2]),
-                                                        fourth: JSON.stringify(game.getPlayers()[3]),
-                                                        fifth: JSON.stringify(game.getPlayers()[4])})
-            // broadcast item array
-            chat.broadcastToRoom('item positions', {items: game.getItems()})
+            players = game.getPlayers()
+            chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
+                                                        second: JSON.stringify(players[1]),
+                                                        third: JSON.stringify(players[2]),
+                                                        fourth: JSON.stringify(players[3]),
+                                                        fifth: JSON.stringify(players[4])})
             // broadcast scores
-            chat.broadcastToRoom('item positions', {scores: game.getScores()})
+            let scores = game.getScoresSorted()
+            let names = scores.map(e => e.name)
+            let points = scores.map(e => e.score)
+            chat.broadcastToRoom('current scores', {names: JSON.stringify(names),
+                                                    scores: JSON.stringify(points)})
         }
     })
 
@@ -112,39 +109,75 @@ wsServer.on('connection', function(socket){
         // trigger collisiotn detection
         // new item array sent if new
         game.updatePlayerPosition(msg.id, JSON.parse(msg.position))
-        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
-                                                    second: JSON.stringify(game.getPlayers()[1]),
-                                                    third: JSON.stringify(game.getPlayers()[2]),
-                                                    fourth: JSON.stringify(game.getPlayers()[3]),
-                                                    fifth: JSON.stringify(game.getPlayers()[4])})
+        items = game.detectCollision(msg.id)
+        players = game.getPlayers()
+        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
+                                                    second: JSON.stringify(players[1]),
+                                                    third: JSON.stringify(players[2]),
+                                                    fourth: JSON.stringify(players[3]),
+                                                    fifth: JSON.stringify(players[4])})
+
+        if (items.length > 0) {
+            chat.broadcastToRoom('delete items', {items: JSON.stringify(items)})
+            // broadcast scores
+            let scores = game.getScoresSorted()
+            let names = scores.map(e => e.name)
+            let points = scores.map(e => e.score)
+            chat.broadcastToRoom('current scores', {names: JSON.stringify(names),
+                                                    scores: JSON.stringify(points)})
+            if (!game.getGameRunning()) {
+                chat.broadcastToRoom('game ends', {})
+                let finalscores = game.getScoresSorted()
+                for (let i = 0; i < finalscores.length; i++) {
+                    app.update(finalscores[i].name, finalscores[i].score)
+                }
+                currentPlayerCount = 0
+                for (let i = 0; i < playersInGame.length; i++) {
+                    playersInGame[i] = false
+                }
+
+            }
+        }
+
+
     })
 
     socket.on('player quits', function(msg){
-        // remove the player from game by id
-        game.removePlayer(msg.id);
-        // remove socket from room
-        socket.leave(chat.getRoomName());
-        // update avatar list for other players
-        chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(game.getPlayers()[0]),
-                                                    second: JSON.stringify(game.getPlayers()[1]),
-                                                    third: JSON.stringify(game.getPlayers()[2]),
-                                                    fourth: JSON.stringify(game.getPlayers()[3]),
-                                                    fifth: JSON.stringify(game.getPlayers()[4])})
+        console.log('player quits')
+        app.update(msg.user, game.getPlayerScore(msg.id))
         // tell other players about leaving
         chat.broadcastToRoom('chat message', msg.user + ': i left the game')
+        // remove the player from game by id
+        finish = game.removePlayer(msg.id);
+        // remove socket from room
+        socket.leave(chat.getRoomName());
+        playersInGame[msg.id] = false
+        // update avatar list for other players
+        if (finish) {
+            currentPlayerCount = 0
+            chat.broadcastToRoom('game ends', {})
+            // TODO do something with final scores?
+        } else {
+            currentPlayerCount -= 1
+            chat.broadcastToRoom('player left', {id : msg.id})
+            // TODO save player score
+            players = game.getPlayers()
+            chat.broadcastToRoom('avatar positions', {  first: JSON.stringify(players[0]),
+                                                        second: JSON.stringify(players[1]),
+                                                        third: JSON.stringify(players[2]),
+                                                        fourth: JSON.stringify(players[3]),
+                                                        fifth: JSON.stringify(players[4])
+            })
+        }
+
     })
 
-    socket.on('load main scoreboard', function(msg){
-
-    })
-
-    socket.on('login', function(msg){
-        console.log('login msg:' + msg);
-        //app.session.user = msg;
-        // check login request
-
-        // send answer to socket
-        //socket.emit...
+    // listener for request on Scoreboard outside the game
+    socket.on('load main scoreboard', function(msg) {
+        app.aggregate(function(responsedata) {
+            console.log('result: ' + responsedata)
+            socket.emit('update main scoreboard', {names: JSON.stringify(responsedata.names), scores: JSON.stringify(responsedata.scores)})
+        })
     })
 
 });

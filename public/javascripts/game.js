@@ -56,12 +56,19 @@ const avatars = new Array(numPlayers);
 const posAvatar = new Array(numPlayers);
 for (let i=0;i<numPlayers;++i){
     avatars[i] = new THREE.Object3D();
-    posAvatar[i] = new Array(3); //3 dimensions x, y, z
-    for (let j=0;j<3;++j){
-        posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
+    posAvatar[i] = new Array(2); //2 dimensions x and z
+    for (let j=0;j<2;++j){
+        posAvatar[i][j] = 0; // initialise to middle of field
     }
-    avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
+    avatars[i].position.set(posAvatar[i][0], myAvatar.height/2, posAvatar[i][1]);
 }
+
+let server = {  array0 : new Array(100),
+                array1 : new Array(100),
+                array2 : new Array(100),
+                array3 : new Array(100),
+                array4 : new Array(100) }
+
 console.log('avatar positions initialised');
 const scores = new Array(numPlayers);   // array of scores received from server
 const itemsToGrab = new Array(100);
@@ -85,8 +92,8 @@ function usernameajax() {
     var settings = {
         "async": true,
         "crossDomain": true,
-        //"url": "http://192.168.178.20:8080/username",    // Home
-        "url": "http://192.168.20.13:8080/username",   // Home2
+        "url": "http://192.168.178.20:8080/username",    // Home
+        //"url": "http://192.168.20.13:8080/username",   // Home2
         //"url": "http://149.222.154.38:8080/username", // FH
         "method": "GET",
         "headers": {
@@ -101,14 +108,12 @@ function usernameajax() {
 
 function getUserName() {
 
-    console.log('function get username called')
 
     $.when(usernameajax()).then(function (response) {
         if (response.status == 200) {
             console.log("getting unsername was successfull")
             username = response.data
             socket.emit('start play', {user: username}, function(responsedata) {
-                console.log("got socket message here")
                 if (responsedata.answer === false) {
                     console.log("you can not enter the game")
                     window.location.href = "menu.html"
@@ -120,6 +125,22 @@ function getUserName() {
                     createPlayingField();
                     createFence();
                     createAvatars();
+
+                    // create items
+                    server.array0 = JSON.parse(responsedata.array0)
+                    server.array1 = JSON.parse(responsedata.array1)
+                    server.array2 = JSON.parse(responsedata.array2)
+                    server.array3 = JSON.parse(responsedata.array3)
+                    server.array4 = JSON.parse(responsedata.array4)
+
+                    let players = JSON.parse(responsedata.players)
+                    console.log(players)
+                    for (let i = 0; i < players.length; i++){
+                        if (players[i]){
+                            scene.add(avatars[i])
+                        }
+                    }
+                    createClientItems()
 
                 }
             } );
@@ -216,9 +237,10 @@ function createAvatars(){
         createBody(i, playerColor);
         createLegs(i);
         createArms(i);
-        scene.add(avatars[i]);
+        //scene.add(avatars[i]);
         avatars[i].position.y = myAvatar.height/2;
     }
+    scene.add(avatars[playerID])
     avatars[playerID].add(camera);
 }
 
@@ -463,9 +485,10 @@ function updateAvatarPos(){
         /*for (let j=0;i<3;++j){
             posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
         }*/
-        if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null) && (posAvatar[i][2] !== null)) {
-            avatars[i].position.set(posAvatar[i][0], posAvatar[i][1], posAvatar[i][2]);
-            console.log('updated player: ' + i)
+        if (gameRunning) {
+            if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null)) {
+                avatars[i].position.set(posAvatar[i][0], myAvatar.height / 2, posAvatar[i][1]);
+            }
         }
     }
 }
@@ -478,11 +501,62 @@ function sendPos(){
         void
     */
     if (gameRunning) {
-        posi = new Array(3)
+        posi = new Array(2)
         posi[0] = avatars[playerID].position.x;
-        posi[1] = avatars[playerID].position.y;
-        posi[2] = avatars[playerID].position.z;
+        posi[1] = avatars[playerID].position.z;
         socket.emit('position update', {id: playerID, position: JSON.stringify(posi)});
+    }
+}
+
+function createClientItems(){
+    /*
+    Description:
+        This function creates the items based on server answer
+    @return:
+        void
+    */
+    "use strict";
+    //server.array0[i] stores geometry type
+    //server.array1[i] stores radius of item
+    //server.array2[i] stores x-coordinate
+    //server.array3[i] stores y-coordinate
+    //server.array4[i] stores z-coordinate
+    for (let i=0;i<itemsToGrab.length;++i){
+        let geometry;
+        if (server.array0[i] === 0){
+            geometry = new THREE.SphereGeometry(server.array1[i], 10, 10);
+        }
+        else if(server.array0[i] === 1){
+            geometry = new THREE.CylinderGeometry(server.array1[i], server.array1[i], server.array1[i], 16);
+        }
+        else{
+            geometry = new THREE.BoxGeometry(server.array1[i], server.array1[i], server.array1[i]);
+        }
+        let randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
+        let radius = myAvatar.headRadius*(1+2*Math.random()-0.5)+myAvatar.bodyWidth*3/2;
+        let material = new THREE.MeshPhongMaterial({side: THREE.DoubleSide,
+            shininess: 50,
+            color:randomColor});
+        itemsToGrab[i] = new THREE.Mesh(geometry, material);
+        itemsToGrab[i].position.x = server.array2[i];
+        itemsToGrab[i].position.y = server.array3[i];
+        itemsToGrab[i].position.z = server.array4[i];
+        scene.add(itemsToGrab[i]);
+    }
+}
+
+function deleteItems(items){
+    /*
+    Description:
+        This function deletes the items based on server answer (avatar contact)
+    @return:
+        void
+    */
+    "use strict";
+    for (let i = 0; i < items.length; i++) {
+        const indexItemToRemove = items[i]
+        scene.remove(itemsToGrab[indexItemToRemove]);
+        itemsToGrab.splice(indexItemToRemove,1);
     }
 }
 
@@ -542,6 +616,8 @@ function startGame() {
     socket.on('chat message', function (msg) {
         // add message to chat
         console.log("received chat message")
+        //$("chatentry").append('<p class="username"><strong>' + data.user + '</strong>:</p>');
+        $("#chatentry").append('<p class="usermessage">' + msg + '</p>');
     });
 
     socket.on('avatar positions', function (msg) {
@@ -564,17 +640,17 @@ function startGame() {
 
     });
 
-    socket.on('item positions', function (msg) {
-        // render new gamefield
-        // reset item array
-        // itemsToGrab = msg.items;
-        console.log("received item message")
-    });
-
     socket.on('current scores', function (msg) {
         // render new gamefield
         // reset score array
         console.log("received scores message")
+        names = JSON.parse(msg.names)
+        newscores = JSON.parse(msg.scores)
+        var html = '';
+        for (i = 0; i < names.length; i++) {
+	    html += '<p class="score">' + (i + 1) + '.  ' + names[i] + '  ' + newscores[i] + '</p>';
+        }
+        $("#scoreentry").html(html);
     });
 
     socket.on('game ends', function (msg) {
@@ -582,11 +658,25 @@ function startGame() {
         console.log("received game end message")
         gameRunning = false
 		alert('Game is over!')
+        window.location.href='menu.html'
     });
 
-    // react on userinput
+    socket.on('delete items', function(msg){
+        console.log("received delete items message")
+        items = JSON.parse(msg.items)
+        deleteItems(items)
+    });
 
-    // rendering function call here
+
+    socket.on('player left', function(msg){
+        console.log("received player left message")
+        scene.remove(avatars[msg.id])
+    });
+
+    socket.on('new player', function(msg){
+        console.log("received new player message")
+        scene.add(avatars[msg.id])
+    });
 }
 
 
@@ -595,7 +685,17 @@ function startGame() {
  */
 // function displayGame()...
 
+
 $("#btn_exit").click(function() {
-    console.log("clicked exit")
     socket.emit('player quits', {id: playerID, user: username})
+    window.location.href='menu.html'
+});
+
+
+$(function () {
+    $('form').submit(function (e) {
+        e.preventDefault();
+        socket.emit('send message', username + ': ' + $("#message").val());
+        $("#message").val('')
+    });
 });
