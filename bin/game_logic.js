@@ -1,4 +1,3 @@
-
 /**
  * server side game logic
  */
@@ -131,96 +130,98 @@ module.exports = class GameBase {
     }
 
 
-	////////////////////////////////////////////////////
-	///////////////  SERVER GAME LOGIC    //////////////
-	////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+///////////////  SERVER GAME LOGIC    //////////////
+////////////////////////////////////////////////////
 
-	createItems(){
-		/*
-		Description: 
-			This function creates the items that populate the field
-		@return: 
-			void
-		*/
-		"use strict";
-        //server.array0[i] stores geometry type
-        //server.array1[i] stores radius of item
-        //server.array2[i] stores x-coordinate
-        //server.array3[i] stores y-coordinate
-        //server.array4[i] stores z-coordinate
-        for (let i=0;i<this.server.array0.length;++i){
-            let radius = this.myAvatar.headRadius*(1+2*Math.random()-0.5)+this.myAvatar.bodyWidth*3/2;
-            let geometry = this.randomGeometry();
-            let offset = 0;
-            if(geometry.type === "SphereGeometry"){
-                offset = geometry.parameters.radius;
-                this.server.array0[i] = 0;
-                this.server.array1[i] = offset;
-            }
-            if(geometry.type === "BoxGeometry"){
-                offset = geometry.parameters.height/2;
-                this.server.array0[i] = 1;
-                this.server.array1[i] = offset*2;
-            }
-            if(geometry.type === "CylinderGeometry"){
-                offset = geometry.parameters.height/2;
-                this.server.array0[i] = 2;
-                this.server.array1[i] = offset*2;
-            }
-            this.server.array3[i] = offset+0.01;
-            this.server.array2[i] = this.myWorld.edge1  * 9/10 * (Math.random()-0.5);
-            this.server.array4[i] = this.myWorld.edge2  * 9/10 * (Math.random()-0.5);
+createItems(){
+    /*
+    Author: Nicola Giaconi
+    Description: 
+        This function creates the items that populate the field
+    @return: 
+        void
+    */
+    "use strict";
+    //server.array0[i] stores geometry type
+    //server.array1[i] stores radius of item
+    //server.array2[i] stores x-coordinate
+    //server.array3[i] stores y-coordinate
+    //server.array4[i] stores z-coordinate
+    for (let i=0;i<this.server.array0.length;++i){
+        let radius = this.myAvatar.headRadius*(1+2*Math.random()-0.5)+this.myAvatar.bodyWidth*3/2;
+        let geometry = this.randomGeometry();
+        let offset = 0;
+        if(geometry.type === "SphereGeometry"){
+            offset = geometry.parameters.radius;
+            this.server.array0[i] = 0;
+            this.server.array1[i] = offset;
         }
-	}
+        if(geometry.type === "BoxGeometry"){
+            offset = geometry.parameters.height/2;
+            this.server.array0[i] = 1;
+            this.server.array1[i] = offset*2;
+        }
+        if(geometry.type === "CylinderGeometry"){
+            offset = geometry.parameters.height/2;
+            this.server.array0[i] = 2;
+            this.server.array1[i] = offset*2;
+        }
+        this.server.array3[i] = offset+0.01;
+        this.server.array2[i] = this.myWorld.edge1  * 9/10 * (Math.random()-0.5);
+        this.server.array4[i] = this.myWorld.edge2  * 9/10 * (Math.random()-0.5);
+    }
+}
 
+randomColor(){
+    /*
+    Author: Nicola Giaconi
+    Description:
+        This function selects a random color
+    @return: THREE.Color
+        Random color
+    */
+    "use strict";
+    const color = new THREE.Color(Math.random(), Math.random(), Math.random());
+    return color;
+}
 
-	randomColor(){
-		/*
-		Description:
-			This function selects a random color
-		@return: THREE.Color
-			Random color
-		*/
-		"use strict";
-		const color = new THREE.Color(Math.random(), Math.random(), Math.random());
-		return color;
-	}
+randomGeometry(){
+    /*
+    Author: Nicola Giaconi
+    This function selects a random geometrical object among a few predefined options
+    @return: Three.Geometry
+        Geometry of the random object
+    */
+    "use strict";
+    const selectGeo = Math.random();
+    if(selectGeo < 1/3){
+        return new THREE.SphereGeometry(this.randomSize(), 10, 10);
+    }
+    else if(selectGeo < 2/3){
+        let size = this.randomSize();
+        return new THREE.CylinderGeometry(size, size, size, 16);
+    }
+    else{
+        let size = this.randomSize();
+        return new THREE.BoxGeometry(size, size, size);
+    }
+}
 
+randomSize(){
+    /*
+    Author: Nicola Giaconi
+        This function selects a random size within a range
+    @return: Number
+        Number denoting random size
+    */
+    "use strict";
+    return this.myAvatar.headRadius*(1+2*Math.random()-0.5)+this.myAvatar.bodyWidth*3/2;
+    }
 
-	randomGeometry(){
-		/*
-		This function selects a random geometrical object among a few predefined options
-		@return: Three.Geometry
-			Geometry of the random object
-		*/
-
-		"use strict";
-		const selectGeo = Math.random();
-		if(selectGeo < 1/3){
-			return new THREE.SphereGeometry(this.randomSize(), 10, 10);
-		}
-		else if(selectGeo < 2/3){
-			let size = this.randomSize();
-			return new THREE.CylinderGeometry(size, size, size, 16);
-		}
-		else{
-			let size = this.randomSize();
-			return new THREE.BoxGeometry(size, size, size);
-		}
-	}
-
-	randomSize(){
-		/*
-		This function selects a random size within a range
-		@return: Number
-			Number denoting random size
-		*/
-		"use strict";
-		return this.myAvatar.headRadius*(1+2*Math.random()-0.5)+this.myAvatar.bodyWidth*3/2;
-	}
-
-    detectCollision(j){
-	/*
+detectCollision(j){
+    /*
+    Author: Nicola Giaconi, Sylvia Reißmann
     Description: 
         This function detects the contact between the avatars and the items
     @input j: number
@@ -228,14 +229,14 @@ module.exports = class GameBase {
     @return: 
         void
     */
-        //server.array0[i] stores geometry type
-        //server.array1[i] stores radius of item
-        //server.array2[i] stores x-coordinate
-        //server.array3[i] stores y-coordinate
-        //server.array4[i] stores z-coordinate
+    //server.array0[i] stores geometry type
+    //server.array1[i] stores radius of item
+    //server.array2[i] stores x-coordinate
+    //server.array3[i] stores y-coordinate
+    //server.array4[i] stores z-coordinate
     "use strict";
-    	let deleted = []	// array to store indexes to be removed
-		let indexcounter = 0
+        let deleted = [];    // array to store indexes to be removed
+        let indexcounter = 0;
         for (let i=0;i<this.server.array0.length;++i){
             let dist;
             let distance2D = Math.sqrt(Math.pow(this.avatars[j][0]-this.server.array2[i],2)+
@@ -252,13 +253,11 @@ module.exports = class GameBase {
             else{
                 dist = 0;
             }
-
-            if(	distance2D <= dist){
-
-                let indexItemToRemove = i
-				deleted[indexcounter] = indexItemToRemove;
-				indexcounter++
-				console.log('deleted item: ' + indexItemToRemove)
+            if(distance2D <= dist){
+                let indexItemToRemove = i;
+                deleted[indexcounter] = indexItemToRemove;
+                indexcounter++;
+                console.log('deleted item: ' + indexItemToRemove);
                 this.server.array0.splice(indexItemToRemove,1);
                 this.server.array1.splice(indexItemToRemove,1);
                 this.server.array2.splice(indexItemToRemove,1);
@@ -268,8 +267,8 @@ module.exports = class GameBase {
             }
         }
         if (this.server.array0.length <= 0) {
-            this.gameRunning = false
+            this.gameRunning = false;
         }
         return deleted;
-	}
+    }
 }

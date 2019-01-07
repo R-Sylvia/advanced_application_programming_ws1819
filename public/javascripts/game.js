@@ -1,9 +1,4 @@
-
-
 //import { getUserName } from 'client_import_functions'
-
-
-// game logic and so on (maybe split in more files) for client side
 
 /**
  * variables for informatione needed for the game
@@ -101,13 +96,10 @@ function usernameajax() {
         },
         "processData": false
     }
-
     return $.get(settings)
-
 }
 
 function getUserName() {
-
 
     $.when(usernameajax()).then(function (response) {
         if (response.status == 200) {
@@ -141,7 +133,6 @@ function getUserName() {
                         }
                     }
                     createClientItems()
-
                 }
             } );
         } else {
@@ -154,19 +145,11 @@ function getUserName() {
 }
 
 ////////////////////////////////////////////////////
-////////////////  Initialisation  //////////////////
-////////////////////////////////////////////////////
-/*playerIndex = getPlayerIndex();
-createPlayingField();
-createFence();
-createAvatars();
-*/
-////////////////////////////////////////////////////
 /////////////  Create Playing field  ///////////////
 ////////////////////////////////////////////////////
-
 function createPlayingField(){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates the playing field
     @return:
@@ -193,6 +176,7 @@ function createPlayingField(){
 
 function createFence(){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates the fence delimiting the field
     @return:
@@ -222,9 +206,9 @@ function createFence(){
 ////////////////////////////////////////////////////
 ////////////////  Create Avatars    ////////////////
 ////////////////////////////////////////////////////
-
 function createAvatars(){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates all the avatars
     @return:
@@ -237,7 +221,6 @@ function createAvatars(){
         createBody(i, playerColor);
         createLegs(i);
         createArms(i);
-        //scene.add(avatars[i]);
         avatars[i].position.y = myAvatar.height/2;
     }
     scene.add(avatars[playerID])
@@ -246,6 +229,7 @@ function createAvatars(){
 
 function createHead(i, colore){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates the head of the avatars
     Parameters:
@@ -268,6 +252,7 @@ function createHead(i, colore){
 
 function createBody(i, colore){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates the body of the avatars
          Parameters:
@@ -293,6 +278,7 @@ function createBody(i, colore){
 
 function createLegs(i){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates the legs of the avatars
     @input i: number
@@ -326,6 +312,7 @@ function createLegs(i){
 
 function createArms(i){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates the arms of the avatars
     @input i: number
@@ -355,6 +342,7 @@ function createArms(i){
 
 function moveJoints(){
     /*
+    Author: Nicola Giaconi
     Description:
         This function moves the client's avatar joints
     @return:
@@ -388,22 +376,9 @@ function moveJoints(){
 ////////////////////////////////////////////////////
 ///////////////  CLIENT GAME LOGIC    //////////////
 ////////////////////////////////////////////////////
-
-/*
-function getPlayerID(){
-    /*
-    Description:
-        This function returns the player ID
-    @return: number
-        player ID
-    * /
-    "use strict";
-    return 0;//TODO, REPLACE WITH PLAYER ID ASSIGNED BY SERVER
-}
-*/
-
 function mycb(event){
     /*
+    Author: Nicola Giaconi
     Description:
         This function moves the avatars
         according to the user´s input (d/a/e/q/w/s)
@@ -417,7 +392,6 @@ function mycb(event){
     const time = clock.getElapsedTime();
     const stepDistance = myAvatar.bodyWidth*1.8;
     if(!gameRunning){
-        //alert("GAME OVER!!!");
         return;
     }
     if(Math.abs(time - lastMoved) < 0.15){//For the human eyes sampling
@@ -466,25 +440,20 @@ function mycb(event){
             return;
         }
     }
-    //detectCollision(i);
 }
+
 document.addEventListener("keydown",mycb);
 
 function updateAvatarPos(){
     /*
+    Author: Sylvia Reißmann, Nicola Giaconi
     Description:
         This function updates the avatars positions for the renderer
     @return:
         void
     */
     "use strict";
-
-    // try:
-
-    for (let i=0;i<numPlayers;++i){		// TODO only for those avatars who exist
-        /*for (let j=0;i<3;++j){
-            posAvatar[i][j] = 0;//instead of 0, SERVER ANSWER
-        }*/
+    for (let i=0;i<numPlayers;++i){
         if (gameRunning) {
             if ((posAvatar[i][0] !== null) && (posAvatar[i][1] !== null)) {
                 avatars[i].position.set(posAvatar[i][0], myAvatar.height / 2, posAvatar[i][1]);
@@ -495,6 +464,7 @@ function updateAvatarPos(){
 
 function sendPos(){
     /*
+    Author: Sylvia Reißmann, Nicola Giaconi
     Description:
         This function informs the server of the avatar (playerID) new position
     @return:
@@ -510,6 +480,7 @@ function sendPos(){
 
 function createClientItems(){
     /*
+    Author: Nicola Giaconi
     Description:
         This function creates the items based on server answer
     @return:
@@ -547,6 +518,7 @@ function createClientItems(){
 
 function deleteItems(items){
     /*
+    Author: Nicola Giaconi
     Description:
         This function deletes the items based on server answer (avatar contact)
     @return:
@@ -564,6 +536,7 @@ function deleteItems(items){
 ////////////////  Render function  /////////////////
 ////////////////////////////////////////////////////
 function render() {
+    //Author: Nicola Giaconi
     //called every 30or 60ms
     const time = clock.getElapsedTime();
     if(Math.abs(time - lastUpdated) < 0.25){//eyes sampling
@@ -576,16 +549,10 @@ function render() {
     requestAnimationFrame(render);
     controls.update();
     renderer.render(scene, camera);
-    // send position update, i.e. send avatar[playerID].position - how to?
 }
 
 render();
 
-//TODO
-//function creating items in the field based on server-side creation
-//function updating items in the field based on server-side detect collision results
-//function getting player score from server
-//communication server-client
 
 function startGame() {
     getUserName()
@@ -619,7 +586,6 @@ function startGame() {
         //$("chatentry").append('<p class="username"><strong>' + data.user + '</strong>:</p>');
         $("#chatentry").append('<p class="usermessage">' + msg + '</p>');
     });
-
     socket.on('avatar positions', function (msg) {
         // render new gamefield
         // update avatar array with avatar position array of server
@@ -637,9 +603,7 @@ function startGame() {
             posAvatar[4] = posis
             //updateAvatarPos()
         }
-
     });
-
     socket.on('current scores', function (msg) {
         // render new gamefield
         // reset score array
@@ -667,7 +631,6 @@ function startGame() {
         deleteItems(items)
     });
 
-
     socket.on('player left', function(msg){
         console.log("received player left message")
         scene.remove(avatars[msg.id])
@@ -679,18 +642,15 @@ function startGame() {
     });
 }
 
-
 /**
  * Renders the game using the variables above
  */
 // function displayGame()...
 
-
 $("#btn_exit").click(function() {
     socket.emit('player quits', {id: playerID, user: username})
     window.location.href='menu.html'
 });
-
 
 $(function () {
     $('form').submit(function (e) {
