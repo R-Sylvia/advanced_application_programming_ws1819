@@ -1,4 +1,9 @@
-
+/**
+ * Client side script for signup page.
+ * @date 01.11.2018
+ * @author Sylvia Reißmann
+ * @author Damoon Arabali
+ */
 
 
 $(function () {

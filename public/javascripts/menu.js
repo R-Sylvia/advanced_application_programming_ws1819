@@ -1,7 +1,14 @@
+/**
+ * Client side script for menu page.
+ * @date 01.11.2018
+ * @author Sylvia Reißmann
+ */
 
 
-// react on logout by deleting logged in info from session coockie (not implemented yet)
-
+/**
+ * Eventhandler for click on button "logout"
+ * @author Sylvia
+ */
 $("#btn_logout").click(function() {
     console.log("button logout clicked")
 
@@ -28,6 +35,11 @@ $("#btn_logout").click(function() {
         }
     })
 });
+
+/**
+ * Eventhandlers for other buttons in menu.
+ * Changing location in this file instead of menu.html to keep the possibility to add functionality to button clicks.
+ */
 
 $("#btn_play").click(function() {
     window.location.href = "game.html"

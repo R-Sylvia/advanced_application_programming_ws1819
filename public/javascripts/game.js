@@ -1,13 +1,11 @@
-//import { getUserName } from 'client_import_functions'
-
 /**
- * variables for informatione needed for the game
- * get updatet via websocket
- * send current position via websocket
+ * Client side script for the game.
+ * @date 16.12.2018
+ * @author Nicola Giaconi
+ * @author Sylvia Reißmann
  */
-// object list
-// current position
-// ...
+
+
 
 let socket = io();
 
@@ -78,11 +76,21 @@ camera.position.z = 150*scaleFactor;
 camera.position.y = 100*scaleFactor;
 camera.position.z = 300*scaleFactor;
 
+/**
+ * Socket connected event.
+ * Starts the game itself.
+ * @author Sylvia
+ */
 socket.on('connect', () => {
     console.log('socketid: ' + socket.id)
     startGame()
 });
 
+/**
+ * Ajax call to get username of the current player.
+ * @author Sylvia
+ * @returns the ajax call.
+ */
 function usernameajax() {
     var settings = {
         "async": true,
@@ -99,6 +107,10 @@ function usernameajax() {
     return $.get(settings)
 }
 
+/**
+ * Starts the game (if possible).
+ * @author Sylvia
+ */
 function getUserName() {
 
     $.when(usernameajax()).then(function (response) {
@@ -444,6 +456,11 @@ function mycb(event){
 
 document.addEventListener("keydown",mycb);
 
+/**
+ * Updates the avatars position from global variable.
+ * @author Nicola
+ * @author Sylvia
+ */
 function updateAvatarPos(){
     /*
     Author: Sylvia Reißmann, Nicola Giaconi
@@ -462,6 +479,10 @@ function updateAvatarPos(){
     }
 }
 
+/**
+ * Sends the current position of the players avatar to the server.
+ * @author Sylvia
+ */
 function sendPos(){
     /*
     Author: Sylvia Reißmann, Nicola Giaconi
@@ -553,39 +574,22 @@ function render() {
 
 render();
 
-
+/**
+ * Triggers the game start and initialisation (getUserName) and handles websocket events.
+ * @author Sylvia
+ */
 function startGame() {
     getUserName()
-    /*ans = getUserName()
-	console.log('anser received: ' + ans)
-    if (ans) {
-        console.log(username)
-        socket.emit('start play', {user: username}, function(responsedata) {
-            console.log("got socket message here")
-            if (responsedata.answer === false) {
-                console.log("you can not enter the game")
-                window.location.href = "menu.html"
-            } else {
-                playerIndex = responsedata.id
-                console.log("entered game " + playerid)
-                // initialise avatar arrays and so on
-                createPlayingField();
-                createFence();
-                createAvatars();
 
-            }
-        } );
-    } else {
-        console.log('no username')
-        window.location.href = "menu.html"
-    }
-	*/
+    // message for the group chat received
     socket.on('chat message', function (msg) {
         // add message to chat
         console.log("received chat message")
         //$("chatentry").append('<p class="username"><strong>' + data.user + '</strong>:</p>');
         $("#chatentry").append('<p class="usermessage">' + msg + '</p>');
     });
+
+    // new avatar positions received
     socket.on('avatar positions', function (msg) {
         // render new gamefield
         // update avatar array with avatar position array of server
@@ -604,6 +608,8 @@ function startGame() {
             //updateAvatarPos()
         }
     });
+
+    // new current player scores received
     socket.on('current scores', function (msg) {
         // render new gamefield
         // reset score array
@@ -617,6 +623,7 @@ function startGame() {
         $("#scoreentry").html(html);
     });
 
+    // game ends message received
     socket.on('game ends', function (msg) {
         // show scores
         console.log("received game end message")
@@ -625,17 +632,20 @@ function startGame() {
         window.location.href='menu.html'
     });
 
+    // received array of items to be removed
     socket.on('delete items', function(msg){
         console.log("received delete items message")
         items = JSON.parse(msg.items)
         deleteItems(items)
     });
 
+    // received message a player left the game
     socket.on('player left', function(msg){
         console.log("received player left message")
         scene.remove(avatars[msg.id])
     });
 
+    // received message a new player joins the game
     socket.on('new player', function(msg){
         console.log("received new player message")
         scene.add(avatars[msg.id])
@@ -643,15 +653,18 @@ function startGame() {
 }
 
 /**
- * Renders the game using the variables above
+ * Eventhandler for click on button "exit".
+ * @author Sylvia
  */
-// function displayGame()...
-
 $("#btn_exit").click(function() {
     socket.emit('player quits', {id: playerID, user: username})
     window.location.href='menu.html'
 });
 
+/**
+ * Eventhandler for click on button "send" to send a message to the group chat.
+ * @author Sylvia
+ */
 $(function () {
     $('form').submit(function (e) {
         e.preventDefault();

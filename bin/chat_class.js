@@ -1,4 +1,9 @@
-
+/**
+ * In this file a class for web socket communication helper functions is defined.
+ *
+ * @date 01.11.2018
+ * @author Sylvia Reißmann
+ */
 
 
 module.exports = class Chat {
