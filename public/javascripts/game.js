@@ -3,6 +3,7 @@
  * @date 16.12.2018
  * @author Nicola Giaconi
  * @author Sylvia Reißmann
+ * @author Anna Lukjanenko
  */
 
 
@@ -582,6 +583,7 @@ function startGame() {
     getUserName()
 
     // message for the group chat received
+    // @author Anna Lukjanenko
     socket.on('chat message', function (msg) {
         // add message to chat
         console.log("received chat message")
@@ -610,6 +612,7 @@ function startGame() {
     });
 
     // new current player scores received
+    // @author Anna Lukjanenko
     socket.on('current scores', function (msg) {
         // render new gamefield
         // reset score array
@@ -664,6 +667,7 @@ $("#btn_exit").click(function() {
 /**
  * Eventhandler for click on button "send" to send a message to the group chat.
  * @author Sylvia
+ * @author Anna
  */
 $(function () {
     $('form').submit(function (e) {
