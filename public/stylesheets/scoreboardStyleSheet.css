@@ -109,9 +109,13 @@ input, select {
 /* **************************************** */
 /* -------- END OF RESET STYLESHEET ------- */
 /* **************************************** */
-
+/**
+ * Stylesheet for scoreboard page
+ * @date 13.01.2019
+ * @author Anna Lukjanenko
+ */
 /* **************************************** */
-/* ------------ MOBILE VERSION ------------ */
+/* ------------ DESKTOP VERSION ----------- */
 /* **************************************** */
 a:hover {
     color: mediumslateblue;
@@ -206,3 +210,6 @@ button:hover {
     font-style: normal;
     color: black;
 }
+/* **************************************** */
+/* -------- END OF DESKTOP VERSION -------- */
+/* **************************************** */
