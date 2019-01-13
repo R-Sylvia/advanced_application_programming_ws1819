@@ -109,9 +109,13 @@ input, select {
 /* **************************************** */
 /* -------- END OF RESET STYLESHEET ------- */
 /* **************************************** */
-
+/**
+ * Stylesheet for login page
+ * @date 13.01.2019
+ * @author Anna Lukjanenko
+ */
 /* **************************************** */
-/* ------------ MOBILE VERSION ------------ */
+/* ------------ DESKTOP VERSION ----------- */
 /* **************************************** */
 
 .canvas {
@@ -126,8 +130,6 @@ html, body {
     margin: 0;
     overflow: hidden;
     background: rgb(237, 222, 241);
-    /*background-size: cover;
-    background-position: center;*/
     font-family: 'DejaVu Serif', 'Times New Roman';
 }
 
@@ -205,3 +207,6 @@ h1{
 .login-box a:hover {
     color: mediumslateblue;
 }
+/* **************************************** */
+/* -------- END OF DESKTOP VERSION -------- */
+/* **************************************** */
