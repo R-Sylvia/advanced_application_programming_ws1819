@@ -1,4 +1,9 @@
-// JavaScript source code
+/**
+ * Script for website canvas
+ * @date 13.01.2019
+ * @author Anna Lukjanenko
+ */
+
 var canvas = document.querySelector('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
