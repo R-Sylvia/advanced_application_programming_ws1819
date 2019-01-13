@@ -109,9 +109,13 @@ input, select {
 /* **************************************** */
 /* -------- END OF RESET STYLESHEET ------- */
 /* **************************************** */
-
+/**
+ * Stylesheet for index/start page
+ * @date 13.01.2019
+ * @author Anna Lukjanenko
+ */
 /* **************************************** */
-/* ------------ MOBILE VERSION ------------ */
+/* ------------ DESKTOP VERSION ----------- */
 /* **************************************** */
 a:hover {
     color: mediumslateblue;
@@ -183,25 +187,6 @@ body, html {
     text-align:center;
 }
 
-
-
 /* **************************************** */
-/* --------- END OF MOBILE VERSION -------- */
-/* **************************************** */
-
-/* **************************************** */
-/* ----------- DESCTOP VERSION ------------ */
-/* **************************************** */
-@media screen and (min-width: 736px) /*wenn benutzer screen größer als 736px is --> mach Desctop-Version*/
-{
-    /*SECOND Desctop-Version*/
-    .grid {
-        display: grid;
-        grid-template-columns: 1fr 500px 1fr; /*die Spaltengröße soll automatisch angepasst werden*/
-        grid-template-rows: 1fr 1fr 1fr;
-        grid-template-areas: ". title ." ". header ." ". content ." ". footer .";
-    }
-}
-/* **************************************** */
-/* -------- END OF DESCTOP VERSION -------- */
+/* -------- END OF DESKTOP VERSION -------- */
 /* **************************************** */
